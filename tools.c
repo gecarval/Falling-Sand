@@ -6,7 +6,7 @@
 /*   By: gecarval <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 17:38:51 by gecarval          #+#    #+#             */
-/*   Updated: 2024/09/02 21:06:33 by gecarval         ###   ########.fr       */
+/*   Updated: 2024/09/04 12:26:50 by gecarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,9 +100,9 @@ void	water_mark(t_data *data)
 
 void	controls_mark(t_data *data)
 {
-	mlx_string_put(data->ini, data->win, 15, 25, 0xFFFFFF, "Q=Empty ; W=FIRE ; E=Steam");
-	mlx_string_put(data->ini, data->win, 15, 30, 0xFFFFFF, "R=WATER ; A=Lava ; S=Sand");
-	mlx_string_put(data->ini, data->win, 15, 35, 0xFFFFFF, "D=Stone ; F=Propane");
+	mlx_string_put(data->ini, data->win, 15, 35, 0xFFFFFF, "Q=Empty ; W=FIRE ; E=Steam");
+	mlx_string_put(data->ini, data->win, 15, 50, 0xFFFFFF, "R=WATER ; A=Lava ; S=Sand");
+	mlx_string_put(data->ini, data->win, 15, 65, 0xFFFFFF, "D=Stone ; F=Propane ; Z=Acid");
 }
 
 void	render_background(t_data *data, int color)
@@ -162,8 +162,8 @@ int	mlx_anim(t_data *data)
 	{
 		fluidsim_start(data);
 		water_mark(data);
-		controls_mark(data);
 		mlx_put_image_to_window(data->ini, data->win, data->img->img_ptr, 0, 0);
+		controls_mark(data);
 		i = 0;
 		while (i < data->timing)
 			i++;
