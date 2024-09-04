@@ -40,12 +40,14 @@
 #define MAT_ID_SALT		(char)54
 #define MAT_ID_ACID		(char)55
 #define MAT_ID_OIL		(char)56
-#define MAT_ID_WATER		(char)57
-#define MAT_ID_LAVA		(char)58
-#define MAT_ID_GUNPOWDER	(char)59
-#define MAT_ID_SAND		(char)60
-#define MAT_ID_STONE		(char)61
-#define MAT_ID_WOOD		(char)62
+#define MAT_ID_OILF		(char)57
+#define MAT_ID_WATER		(char)58
+#define MAT_ID_LAVA		(char)59
+#define MAT_ID_GUNPOWDER	(char)60
+#define MAT_ID_SAND		(char)61
+#define MAT_ID_STONE		(char)62
+#define MAT_ID_WOOD		(char)63
+#define MAT_ID_WOODF		(char)64
 
 // COLOR
 #define MAT_COL_EMPTY      0x000000
@@ -53,7 +55,8 @@
 #define MAT_COL_SALT       0xC8B4BE
 #define MAT_COL_WATER      0x1464AA
 #define MAT_COL_STONE      0x787078
-#define MAT_COL_WOOD       0x3C2814
+#define MAT_COL_WOOD       0xA1662F
+#define MAT_COL_WOODF      0xff662F
 #define MAT_COL_FIRE       0x961400
 #define MAT_COL_SMOKE      0x323232
 #define MAT_COL_PROPANE    0xDDFFDD
@@ -61,6 +64,7 @@
 #define MAT_COL_STEAM      0xDCDCFB
 #define MAT_COL_GUNPOWDER  0x3C3C3C
 #define MAT_COL_OIL        0x50463C
+#define MAT_COL_OILF       0x50465C
 #define MAT_COL_LAVA       0xCF1020
 #define MAT_COL_ACID       0x5AC83C
 
@@ -201,6 +205,7 @@ t_pt	mtvc_mult(t_matrix3x3 mat, t_pt pt);
 t_pt	mat_mult(t_matrix3x3 mat, t_matrix3x3 pt);
 // WATER MARKS
 void	water_mark(t_data *data);
+void	controls_mark(t_data *data);
 //PIXEL PUTS
 void	pixel_to_img(int x, int y, t_data *data, int color);
 void	pixel_to_img_float(float_t x, float_t y, t_data *data, int color);
@@ -222,6 +227,8 @@ void	emulate_water(int x, int y, t_data *data, char c);
 void	emulate_steam(int x, int y, t_data *data, char c);
 void	emulate_lava(int x, int y, t_data *data, char c);
 void	emulate_acid(int x, int y, t_data *data, char c);
+void	emulate_wood(int x, int y, t_data *data);
+void	emulate_woodf(int x, int y, t_data *data);
 int		emulate_gas(int x, int y, t_data *data);
 int		emulate_fire(int x, int y, t_data *data);
 int		emulate_sand(int x, int y, t_data *data, int randed);

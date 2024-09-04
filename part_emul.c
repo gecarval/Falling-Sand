@@ -6,7 +6,7 @@
 /*   By: gecarval <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:28:33 by gecarval          #+#    #+#             */
-/*   Updated: 2024/09/04 10:45:06 by gecarval         ###   ########.fr       */
+/*   Updated: 2024/09/04 13:42:06 by gecarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -333,6 +333,10 @@ int	emulate_sand(int x, int y, t_data *data, int randed)
 		}
 		return (1);
 	}
+	if (equal == 0)
+		equal = 1;
+	else
+		equal = 0;
 	return (0);
 }
 
@@ -505,5 +509,48 @@ void	emulate_acid(int x, int y, t_data *data, char c)
 			iter = 0;
 			return ;
 		}
+	}
+}
+
+void	emulate_wood(int x, int y, t_data *data)
+{
+	t_pt	pt;
+
+	pt = find_id(x, y, data, MAT_ID_LAVA);
+	if (pt.z == 1)
+	{
+		data->fsim->map[y][x] = MAT_ID_WOODF;
+		return ;
+	}
+	pt = find_id(x, y, data, MAT_ID_FIRE);
+	if (pt.z == 1)
+	{
+		data->fsim->map[y][x] = MAT_ID_WOODF;
+		return ;
+	}
+}
+
+void	emulate_woodf(int x, int y, t_data *data)
+{
+	t_pt	pt;
+
+	if (y > 1 && rand() % 50 == 0 && data->fsim->map[y - 1][x] == MAT_ID_EMPTY)
+		data->fsim->map[y - 1][x] = MAT_ID_FIRE;
+	if (rand() % 750 == 0)
+		data->fsim->map[y][x] = MAT_ID_FIRE;
+	if (rand() % 75 == 0)
+	{
+		pt = find_id(x, y, data, MAT_ID_WOOD);
+		if (pt.z == 1)
+		{
+			data->fsim->map[y][x] = MAT_ID_WOODF;
+			return ;
+		}
+	}
+	pt = find_id(x, y, data, MAT_ID_WATER);
+	if (pt.z == 1)
+	{
+		data->fsim->map[y][x] = MAT_ID_WOOD;
+		return ;
 	}
 }

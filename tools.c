@@ -6,7 +6,7 @@
 /*   By: gecarval <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 17:38:51 by gecarval          #+#    #+#             */
-/*   Updated: 2024/09/04 12:26:50 by gecarval         ###   ########.fr       */
+/*   Updated: 2024/09/04 13:03:04 by gecarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,14 +95,20 @@ void	pixel_to_img_float(float_t x, float_t y, t_data *data, int color)
 void	water_mark(t_data *data)
 {
 	mlx_string_put(data->ini, data->win,
-		15, 20, 120000, "renders by gecarval");
+		15, 15, 120000, "renders by gecarval");
+	mlx_string_put(data->ini, data->win,
+		15, 30, 120000, "Press 1 for Cube");
+	mlx_string_put(data->ini, data->win,
+		15, 45, 120000, "Press 2 for Fluid Sim");
 }
 
 void	controls_mark(t_data *data)
 {
-	mlx_string_put(data->ini, data->win, 15, 35, 0xFFFFFF, "Q=Empty ; W=FIRE ; E=Steam");
-	mlx_string_put(data->ini, data->win, 15, 50, 0xFFFFFF, "R=WATER ; A=Lava ; S=Sand");
-	mlx_string_put(data->ini, data->win, 15, 65, 0xFFFFFF, "D=Stone ; F=Propane ; Z=Acid");
+	mlx_string_put(data->ini, data->win, 15, 15, 0xFFFFFF, "'LMB'=Brush_On ; 'RMB'=Brush_Off");
+	mlx_string_put(data->ini, data->win, 15, 30, 0xFFFFFF, "','=Decrease_Brush ; '.'=Increase_Brush");
+	mlx_string_put(data->ini, data->win, 15, 45, 0xFFFFFF, "Q=Empty ; W=Fire ; E=Steam");
+	mlx_string_put(data->ini, data->win, 15, 60, 0xFFFFFF, "R=Water ; A=Lava ; S=Sand");
+	mlx_string_put(data->ini, data->win, 15, 75, 0xFFFFFF, "D=Stone ; F=Propane ; Z=Acid");
 }
 
 void	render_background(t_data *data, int color)
@@ -179,7 +185,7 @@ int	mlx_anim(t_data *data)
 int	mlx_cooked(int key, t_data *data)
 {
 	if (key == 'g')
-		data->click_fill = 'P';
+		data->click_fill = MAT_ID_WOOD;
 	if (key == 'q')
 		data->click_fill = MAT_ID_EMPTY;
 	if (key == 'w')
@@ -204,9 +210,9 @@ int	mlx_cooked(int key, t_data *data)
 		data->anicub *= -1;
 	if (key == '2')
 		data->anifsim *= -1;
-	if (key == ',')
-		data->brush_size += 1;
 	if (key == '.')
+		data->brush_size += 1;
+	if (key == ',')
 		if (data->brush_size > 0)
 			data->brush_size -= 1;
 	if (key == ']')

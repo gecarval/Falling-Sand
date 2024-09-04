@@ -6,7 +6,7 @@
 /*   By: gecarval <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 14:24:07 by gecarval          #+#    #+#             */
-/*   Updated: 2024/09/02 21:06:22 by gecarval         ###   ########.fr       */
+/*   Updated: 2024/09/04 13:29:50 by gecarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,16 +25,24 @@ void	render_fluidmap(t_data *data)
 		{
 			if (data->fsim->map[y][x] == 'G')
 				pixel_to_img(x, y, data, 0x555555);
-			if (data->fsim->map[y][x] == 'P')
-				pixel_to_img(x, y, data, 0x775555);
+			else if (data->fsim->map[y][x] == MAT_ID_WOODF)
+				pixel_to_img(x, y, data, MAT_COL_WOODF);
+			else if (data->fsim->map[y][x] == MAT_ID_WOOD)
+				pixel_to_img(x, y, data, MAT_COL_WOOD);
 			else if (data->fsim->map[y][x] == MAT_ID_STONE)
 				pixel_to_img(x, y, data, MAT_COL_STONE);
 			else if (data->fsim->map[y][x] == MAT_ID_SAND)
 				pixel_to_img(x, y, data, MAT_COL_SAND);
+			else if (data->fsim->map[y][x] == MAT_ID_GUNPOWDER)
+				pixel_to_img(x, y, data, MAT_COL_GUNPOWDER);
 			else if (data->fsim->map[y][x] == MAT_ID_LAVA)
 				pixel_to_img(x, y, data, MAT_COL_LAVA);
 			else if (data->fsim->map[y][x] == MAT_ID_WATER)
 				pixel_to_img(x, y, data, MAT_COL_WATER);
+			else if (data->fsim->map[y][x] == MAT_ID_OIL)
+				pixel_to_img(x, y, data, MAT_COL_OIL);
+			else if (data->fsim->map[y][x] == MAT_ID_OILF)
+				pixel_to_img(x, y, data, MAT_COL_OILF);
 			else if (data->fsim->map[y][x] == MAT_ID_ACID)
 				pixel_to_img(x, y, data, MAT_COL_ACID);
 			else if (data->fsim->map[y][x] == MAT_ID_SALT)
@@ -129,20 +137,24 @@ void	process_gravity(t_data *data)
 		{
 			if (data->fsim->map[y][x] == MAT_ID_FIRE)
 				emulate_fire(x, y, data);
+			else if (data->fsim->map[y][x] == MAT_ID_PROPANE)
+				emulate_propane(x, y, data);
 			else if (data->fsim->map[y][x] == MAT_ID_STEAM)
 				emulate_steam(x, y, data, MAT_ID_STEAM);
-			else if (data->fsim->map[y][x] == MAT_ID_ACID)
-				emulate_acid(x, y, data, MAT_ID_ACID);
 			else if (data->fsim->map[y][x] == MAT_ID_WATER)
 				emulate_water(x, y, data, MAT_ID_WATER);
 			else if (data->fsim->map[y][x] == MAT_ID_LAVA)
 				emulate_lava(x, y, data, MAT_ID_LAVA);
-			else if (data->fsim->map[y][x] == MAT_ID_PROPANE)
-				emulate_propane(x, y, data);
+			else if (data->fsim->map[y][x] == MAT_ID_ACID)
+				emulate_acid(x, y, data, MAT_ID_ACID);
 			else if (data->fsim->map[y][x] == MAT_ID_SAND)
 				emulate_sand(x, y, data, 2);
 			else if (data->fsim->map[y][x] == MAT_ID_STONE)
 				emulate_sand(x, y, data, 1);
+			else if (data->fsim->map[y][x] == MAT_ID_WOOD)
+				emulate_wood(x, y, data);
+			else if (data->fsim->map[y][x] == MAT_ID_WOODF)
+				emulate_woodf(x, y, data);
 		}
 	}
 }
