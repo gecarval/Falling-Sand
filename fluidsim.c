@@ -6,7 +6,7 @@
 /*   By: gecarval <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 14:24:07 by gecarval          #+#    #+#             */
-/*   Updated: 2024/09/04 13:29:50 by gecarval         ###   ########.fr       */
+/*   Updated: 2024/09/04 13:46:38 by gecarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,6 +143,10 @@ void	process_gravity(t_data *data)
 				emulate_steam(x, y, data, MAT_ID_STEAM);
 			else if (data->fsim->map[y][x] == MAT_ID_WATER)
 				emulate_water(x, y, data, MAT_ID_WATER);
+			else if (data->fsim->map[y][x] == MAT_ID_OIL)
+				emulate_oil(x, y, data, MAT_ID_OIL);
+			else if (data->fsim->map[y][x] == MAT_ID_OILF)
+				emulate_oilf(x, y, data, MAT_ID_OILF);
 			else if (data->fsim->map[y][x] == MAT_ID_LAVA)
 				emulate_lava(x, y, data, MAT_ID_LAVA);
 			else if (data->fsim->map[y][x] == MAT_ID_ACID)

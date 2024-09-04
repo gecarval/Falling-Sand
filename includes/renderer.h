@@ -48,6 +48,7 @@
 #define MAT_ID_STONE		(char)62
 #define MAT_ID_WOOD		(char)63
 #define MAT_ID_WOODF		(char)64
+#define MAT_ID_WIND		(char)65
 
 // COLOR
 #define MAT_COL_EMPTY      0x000000
@@ -56,7 +57,7 @@
 #define MAT_COL_WATER      0x1464AA
 #define MAT_COL_STONE      0x787078
 #define MAT_COL_WOOD       0xA1662F
-#define MAT_COL_WOODF      0xff662F
+#define MAT_COL_WOODF      0xFF662F
 #define MAT_COL_FIRE       0x961400
 #define MAT_COL_SMOKE      0x323232
 #define MAT_COL_PROPANE    0xDDFFDD
@@ -64,7 +65,7 @@
 #define MAT_COL_STEAM      0xDCDCFB
 #define MAT_COL_GUNPOWDER  0x3C3C3C
 #define MAT_COL_OIL        0x50463C
-#define MAT_COL_OILF       0x50465C
+#define MAT_COL_OILF       0xA0463C
 #define MAT_COL_LAVA       0xCF1020
 #define MAT_COL_ACID       0x5AC83C
 
@@ -229,6 +230,8 @@ void	emulate_lava(int x, int y, t_data *data, char c);
 void	emulate_acid(int x, int y, t_data *data, char c);
 void	emulate_wood(int x, int y, t_data *data);
 void	emulate_woodf(int x, int y, t_data *data);
+void	emulate_oil(int x, int y, t_data *data, char c);
+void	emulate_oilf(int x, int y, t_data *data, char c);
 int		emulate_gas(int x, int y, t_data *data);
 int		emulate_fire(int x, int y, t_data *data);
 int		emulate_sand(int x, int y, t_data *data, int randed);
