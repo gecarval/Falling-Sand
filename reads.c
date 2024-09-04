@@ -6,7 +6,7 @@
 /*   By: gecarval <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 20:37:31 by gecarval          #+#    #+#             */
-/*   Updated: 2024/08/30 11:52:49 by gecarval         ###   ########.fr       */
+/*   Updated: 2024/08/30 18:24:46 by gecarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,6 @@ void	create_mapz(t_data *data)
 	data->map->roty = (t_matrix3x3 *)malloc(sizeof(t_matrix3x3));
 	data->map->rotz = (t_matrix3x3 *)malloc(sizeof(t_matrix3x3));
 	data->map->prj = (t_matrix3x3 *)malloc(sizeof(t_matrix3x3));
-	*data->map->rotx = (t_matrix3x3){1, 0, 0, 0, cos(data->iso), -sin(data->iso), 0, sin(data->iso), cos(data->iso)};
-	*data->map->roty = (t_matrix3x3){cos(data->iso), 0, sin(data->iso), 0 , 1, 0, -sin(data->iso), 0, cos(data->iso)};
-	*data->map->rotz = (t_matrix3x3){cos(data->iso), -sin(data->iso), 0, sin(data->iso), cos(data->iso), 0, 0, 0, 1};
-	*data->map->prj = (t_matrix3x3){1, 0, 0, 0, 1, 0, 0, 0, 1};
 	map->mapz = (t_pt *)malloc(sizeof(t_pt) * map->max_y * map->max_x * map->max_z);
 	if (!map->mapz)
 		display_error(data, "mapi malloc error\n");
@@ -38,6 +34,35 @@ void	create_mapz(t_data *data)
 	data->dist = 3;
 	fake_map(map);
 	backup_map(data);
+}
+
+void	create_fsim(t_data *data)
+{
+	int	i;
+	int	j;
+
+	data->fsim->map = (char **)malloc(sizeof(char *) * (WINY + 1));
+	if (!data->fsim->map)
+		display_error(data, "error malloc simmap");
+	data->fsim->map[WINY] = NULL;
+	i = -1;
+	while (++i < WINY)
+	{
+		j = -1;
+		data->fsim->map[i] = (char *)malloc(sizeof(char) * (WINX + 1));
+		if (!data->fsim->map[i])
+			display_error(data, "error malloc simmap");
+		while (++j < WINX)
+		{
+			if (i == 0 || i == (WINY - 1))
+				data->fsim->map[i][j] = 'G';
+			else if (j == 0 || j == (WINX - 1))
+				data->fsim->map[i][j] = 'G';
+			else
+				data->fsim->map[i][j] = '0';
+		}
+		data->fsim->map[i][j] = '\0';
+	}
 }
 
 void	fake_map(t_map *map)
@@ -137,62 +162,3 @@ void	backup_map(t_data *data)
 		i++;
 	}
 }
-
-/*char	*get_vector(t_data *data)
-{
-	char	*xt;
-	int	x;
-	int	i;
-
-	x = 2;
-	xt = (char *)malloc(sizeof(char) * (x + 1));
-	if (!xt)
-		display_error(data, "tensor malloc error\n");
-
-	xt[x] = '\0';
-	i = 0;
-	while (xt[i] != '\0')
-	{
-		xt[i] = '0';
-		i++;
-	}
-	return (xt);
-}
-
-char	**get_matrix(t_data *data)
-{
-	char	**yt;
-	int	y;
-	int	i;
-
-	y = 2;
-	yt = (char **)malloc(sizeof(char *) * (y + 1));
-	if (!yt)
-		display_error(data, "tensor malloc error\n");
-	yt[y] = NULL;
-	i = 0;
-	while (yt[i] != NULL)
-	{
-		yt[i] = get_vector(data);
-		i++;
-	}
-	return (yt);
-}
-
-void	create_tensor(t_data *data)
-{
-	int	i;
-	int	z;
-
-	z = 2;
-	data->map->tensor = (char ***)malloc(sizeof(char **) * (z + 1));
-	if (!data->map->tensor)
-		display_error(data, "tensor malloc error\n");
-	data->map->tensor[z] = NULL;
-	i = 0;
-	while (data->map->tensor[i] != NULL)
-	{
-		data->map->tensor[i] = get_matrix(data);
-		i++;
-	}
-}*/

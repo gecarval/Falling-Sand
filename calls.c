@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   calls.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gecarval <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: gecarval <gecarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 20:32:15 by gecarval          #+#    #+#             */
-/*   Updated: 2024/08/27 17:31:36 by gecarval         ###   ########.fr       */
+/*   Updated: 2024/08/30 14:08:54 by gecarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,18 @@ int	exit_data(t_data *data, int fd)
 		mlx_destroy_image(data->ini, data->img->img_ptr);
 	if (data->img != NULL)
 		free(data->img);
+	if (data->fsim->map != NULL)
+		ft_free_matrix(data->fsim->map);
+	if (data->fsim != NULL)
+		free(data->fsim);
+	if (data->map->rotx != NULL)
+		free(data->map->rotx);
+	if (data->map->roty != NULL)
+		free(data->map->roty);
+	if (data->map->rotz != NULL)
+		free(data->map->rotz);
+	if (data->map->prj != NULL)
+		free(data->map->prj);
 	if (data->map->mapz != NULL)
 		free(data->map->mapz);
 	if (data->map->parsed_file != NULL)
@@ -63,14 +75,18 @@ void	ft_init_program(t_data *data)
 	data->map->parsed_file = NULL;
 	data->map->mapz = NULL;
 	data->cam = NULL;
+	data->fsim = (t_fluidsim *)malloc(sizeof(t_fluidsim));
+	if (!data->fsim)
+		display_error(data, "map malloc error\n");
+	data->fsim->map = NULL;
 	data->img = (t_img *)malloc(sizeof(t_img));
 	if (!data->img)
 		display_error(data, "img malloc error\n");
 	data->img->img_ptr = mlx_new_image(data->ini, WINX, WINY);
 	if (!data->img->img_ptr)
 		display_error(data, "img ptr error\n");
-	data->img->img_px = mlx_get_data_addr(data->img->img_ptr,
-			&data->img->bpp, &data->img->llen, &data->img->end);
+	data->img->img_px = mlx_get_data_addr(data->img->img_ptr, &data->img->bpp,
+			&data->img->llen, &data->img->end);
 	if (!data->img->img_px)
 		display_error(data, "img data error\n");
 }

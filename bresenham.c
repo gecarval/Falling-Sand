@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bresenham.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gecarval <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: gecarval <gecarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 17:53:51 by gecarval          #+#    #+#             */
-/*   Updated: 2024/08/29 12:45:12 by gecarval         ###   ########.fr       */
+/*   Updated: 2024/08/30 14:48:27 by gecarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@ void	draw_line_y(t_delta x, t_delta y, t_data *data, int color)
 {
 	float_t	dx;
 	float_t	dy;
-	int	step;
-	int	xi;
+	int		step;
+	int		xi;
 
 	dx = x.fin - x.ini;
 	dy = y.fin - y.ini;
@@ -28,7 +28,7 @@ void	draw_line_y(t_delta x, t_delta y, t_data *data, int color)
 	step = (2 * dx) - dy;
 	while (y.ini < y.fin)
 	{
-		pixel_to_img(x.ini, y.ini, data, color);
+		pixel_to_img_float(x.ini, y.ini, data, color);
 		if (step > 0)
 			x.ini += xi;
 		if (step > 0)
@@ -43,8 +43,8 @@ void	draw_line_x(t_delta x, t_delta y, t_data *data, int color)
 {
 	float_t	dx;
 	float_t	dy;
-	int	step;
-	int	yi;
+	int		step;
+	int		yi;
 
 	dx = x.fin - x.ini;
 	dy = y.fin - y.ini;
@@ -55,7 +55,7 @@ void	draw_line_x(t_delta x, t_delta y, t_data *data, int color)
 	step = (2 * dy) - dx;
 	while (x.ini < x.fin)
 	{
-		pixel_to_img(x.ini, y.ini, data, color);
+		pixel_to_img_float(x.ini, y.ini, data, color);
 		if (step > 0)
 			y.ini += yi;
 		if (step > 0)
