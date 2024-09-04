@@ -59,6 +59,7 @@
 #define MAT_COL_WOOD       0xA1662F
 #define MAT_COL_WOODF      0xFF662F
 #define MAT_COL_FIRE       0x961400
+#define MAT_COL_FIREGLOW   0x400000
 #define MAT_COL_SMOKE      0x323232
 #define MAT_COL_PROPANE    0xDDFFDD
 #define MAT_COL_EMBER      0xC87814

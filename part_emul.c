@@ -6,11 +6,31 @@
 /*   By: gecarval <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:28:33 by gecarval          #+#    #+#             */
-/*   Updated: 2024/09/04 14:12:27 by gecarval         ###   ########.fr       */
+/*   Updated: 2024/09/04 18:48:12 by gecarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/renderer.h"
+
+int	equal_flud(int x, int y, t_data *data, char c)
+{
+	int	i;
+	int	l;
+	int	r;
+
+	i = 0;
+	l = 0;
+	while (i < x)
+		if (data->fsim->map[y][i++] == c)
+			l++;
+	r = 0;
+	while (i < WINX)
+		if (data->fsim->map[y][i++] == c)
+			r++;
+	if (l < r)
+		return (0);
+	return (1);
+}
 
 int	emulate_propane(int x, int y, t_data *data)
 {
@@ -313,7 +333,7 @@ int	emulate_sand(int x, int y, t_data *data, int randed)
 		if (rand() % 2 && iter < 3)
 		{
 			iter++;
-			emulate_sand(x, y + 1, data, randed);
+			emulate_sand(x - 1, y + 1, data, randed);
 		}
 		else
 		{
@@ -331,7 +351,7 @@ int	emulate_sand(int x, int y, t_data *data, int randed)
 		if (rand() % 2 && iter < 3)
 		{
 			iter++;
-			emulate_sand(x, y + 1, data, randed);
+			emulate_sand(x + 1, y + 1, data, randed);
 		}
 		else
 		{
@@ -350,18 +370,22 @@ int	emulate_sand(int x, int y, t_data *data, int randed)
 void	emulate_water(int x, int y, t_data *data, char c)
 {
 	static int iter = 0;
+	static int flud[WINX * WINY];
 
-	if (y < (int)WINY - 2 && emulate_sand(x, y, data, 10) == 1)
+	if (flud[(y * WINX) + x] == 0)
 	{
-		return ;
-	}	
-	if (data->fsim->map[y][x - 1] < c && rand() % 2 && data->fsim->map[y][x] == c)
+		if (y < (int)WINY - 2 && emulate_sand(x, y, data, 10) == 1)
+			return ;
+	}
+	flud[(y * WINX) + x] = 0;
+	if (((data->fsim->map[y][x - 1] < c) && rand() % 3) && (data->fsim->map[y][x] == c && equal_flud(x, y, data, c) == 0))
 	{
 		data->fsim->map[y][x] = data->fsim->map[y][x - 1];
 		data->fsim->map[y][x - 1] = c;
-		if (rand() % 3 && iter < 3)
+		if (rand() % 3 && iter < 4)
 		{
 			iter++;
+			flud[(y * WINX) + x - 1] = 1;
 			emulate_water(x - 1, y, data, c);
 		}
 		else
@@ -371,13 +395,14 @@ void	emulate_water(int x, int y, t_data *data, char c)
 		}
 		return ;
 	}
-	if (data->fsim->map[y][x + 1] < c && rand() % 2 && data->fsim->map[y][x] == c)
+	else if ((data->fsim->map[y][x + 1] < c && rand() % 3) && (data->fsim->map[y][x] == c))
 	{
 		data->fsim->map[y][x] = data->fsim->map[y][x + 1];
 		data->fsim->map[y][x + 1] = c;
-		if (rand() % 3 && iter < 3)
+		if (rand() % 3 && iter < 4)
 		{
 			iter++;
+			flud[(y * WINX) + x + 1] = 1;
 			emulate_water(x + 1, y, data, c);
 		}
 		else
@@ -392,28 +417,22 @@ void	emulate_water(int x, int y, t_data *data, char c)
 void	emulate_steam(int x, int y, t_data *data, char c)
 {
 	if (y > 1 && emulate_gas(x, y, data) == 1)
-	{
 		return ;
-	}	
-	else if (data->fsim->map[y][x - 1] < c && rand() % 2 && data->fsim->map[y][x] == c)
+	if (rand() % 1000 == 0 && data->fsim->map[y][x] == c)
+	{
+		data->fsim->map[y][x] = MAT_ID_WATER;
+		return ;
+	}
+	if ((data->fsim->map[y][x - 1] < c && rand() % 2) && (data->fsim->map[y][x] == c && equal_flud(x, y, data, c) == 0))
 	{
 		data->fsim->map[y][x] = data->fsim->map[y][x - 1];
 		data->fsim->map[y][x - 1] = c;
-		if (rand() % 1000 == 0)
-			data->fsim->map[y][x - 1] = MAT_ID_WATER;
 		return ;
 	}
-	else if (data->fsim->map[y][x + 1] < c && data->fsim->map[y][x] == c)
+	else if ((data->fsim->map[y][x + 1] < c && rand() % 2) && data->fsim->map[y][x] == c)
 	{
 		data->fsim->map[y][x] = data->fsim->map[y][x + 1];
 		data->fsim->map[y][x + 1] = c;
-		if (rand() % 1000 == 0)
-			data->fsim->map[y][x + 1] = MAT_ID_WATER;
-		return ;
-	}
-	else if (rand() % 1000 == 0 && data->fsim->map[y][x] == c)
-	{
-		data->fsim->map[y][x] = MAT_ID_WATER;
 		return ;
 	}
 }
@@ -431,10 +450,22 @@ void	emulate_lava(int x, int y, t_data *data, char c)
 	}
 	if (y > 1 && rand() % 500 == 0 && data->fsim->map[y - 1][x] == MAT_ID_EMPTY)
 		data->fsim->map[y - 1][x] = MAT_ID_FIRE;
+	if (data->fsim->map[y][x] == c)
+	{
+		pt = find_id(x, y, data, MAT_ID_STONE);
+		if (pt.z == 1 && rand() % 100 == 0)
+		{
+			data->fsim->map[(int)pt.y][(int)pt.x] = c;
+			data->fsim->map[y][x] = c;
+			return ;
+		}
+	}
 	if (y < (int)WINY - 2 && emulate_sand(x, y, data, 1))
 	{
 		return ;
-	}	
+	}
+	if (rand() % 3 == 0)
+		return ;
 	else if (data->fsim->map[y][x - 1] < c && rand() % 2 && data->fsim->map[y][x] == c)
 	{
 		data->fsim->map[y][x] = data->fsim->map[y][x - 1];
@@ -444,16 +475,6 @@ void	emulate_lava(int x, int y, t_data *data, char c)
 	{
 		data->fsim->map[y][x] = data->fsim->map[y][x + 1];
 		data->fsim->map[y][x + 1] = c;
-	}
-	else if (data->fsim->map[y][x] == c)
-	{
-		pt = find_id(x, y, data, MAT_ID_STONE);
-		if (pt.z == 1 && rand() % 100 == 0)
-		{
-			data->fsim->map[(int)pt.y][(int)pt.x] = c;
-			data->fsim->map[y][x] = c;
-			return ;
-		}
 	}
 }
 

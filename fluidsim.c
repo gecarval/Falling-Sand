@@ -6,7 +6,7 @@
 /*   By: gecarval <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 14:24:07 by gecarval          #+#    #+#             */
-/*   Updated: 2024/09/04 13:46:38 by gecarval         ###   ########.fr       */
+/*   Updated: 2024/09/04 15:26:39 by gecarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,17 @@ void	render_fluidmap(t_data *data)
 			else if (data->fsim->map[y][x] == MAT_ID_STEAM)
 				pixel_to_img(x, y, data, MAT_COL_STEAM);
 			else if (data->fsim->map[y][x] == MAT_ID_EMPTY)
+			{
 				pixel_to_img(x, y, data, MAT_COL_EMPTY);
+				if (data->fsim->map[y][x + 1] == MAT_ID_FIRE)
+					pixel_to_img(x, y, data, MAT_COL_FIREGLOW);
+				if (data->fsim->map[y][x - 1] == MAT_ID_FIRE)
+					pixel_to_img(x, y, data, MAT_COL_FIREGLOW);
+				if (data->fsim->map[y + 1][x] == MAT_ID_FIRE)
+					pixel_to_img(x, y, data, MAT_COL_FIREGLOW);
+				if (data->fsim->map[y - 1][x] == MAT_ID_FIRE)
+					pixel_to_img(x, y, data, MAT_COL_FIREGLOW);
+			}
 		}
 	}
 }
