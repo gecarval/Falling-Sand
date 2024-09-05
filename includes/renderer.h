@@ -234,7 +234,7 @@ void	emulate_oil(int x, int y, t_data *data, char c);
 void	emulate_oilf(int x, int y, t_data *data, char c);
 int		emulate_gas(int x, int y, t_data *data);
 int		emulate_fire(int x, int y, t_data *data);
-int		emulate_sand(int x, int y, t_data *data, int randed);
+int		emulate_sand(int x, int y, t_data *data, int randed, int slide);
 int		emulate_propane(int x, int y, t_data *data);
 // MAP READ
 void	set_height_range(t_map *map, t_pt *cur);
