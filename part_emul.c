@@ -6,7 +6,7 @@
 /*   By: gecarval <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:28:33 by gecarval          #+#    #+#             */
-/*   Updated: 2024/09/05 21:12:30 by gecarval         ###   ########.fr       */
+/*   Updated: 2024/09/05 21:30:42 by gecarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ void	push_inertia(int x, int y, t_data *data, int force)
 		if (i < WINX)
 			if (data->fsim->map[y][i] == data->fsim->map[y - 1][x])
 				r++;
+		if (data->fsim->map[y][i] > data->fsim->map[y - 1][x])
+			break ;
 		if (data->fsim->map[y][i] == MAT_ID_EMPTY)
 		{
 			emp = 1;
@@ -46,6 +48,8 @@ void	push_inertia(int x, int y, t_data *data, int force)
 		if (i > 0)
 			if (data->fsim->map[y][i] == data->fsim->map[y - 1][x])
 				l++;
+		if (data->fsim->map[y][i] > data->fsim->map[y - 1][x])
+			break ;
 		if (data->fsim->map[y][i] == MAT_ID_EMPTY)
 		{
 			emp = 1;
@@ -173,7 +177,7 @@ int	emulate_propane(int x, int y, t_data *data)
 		{
 			iter[y - 1][x] += iter[y][x] + 1;
 			iter[y][x] = 0;
-			emulate_sand(x, y - 1, data, 2, 2);
+			emulate_sand(x, y - 1, data, 2, 2, 0);
 		}
 		else
 		{
@@ -190,7 +194,7 @@ int	emulate_propane(int x, int y, t_data *data)
 		{
 			iter[y - 1][x - 1] += iter[y][x] + 1;
 			iter[y][x] = 0;
-			emulate_sand(x - 1, y - 1, data, 2, 2);
+			emulate_sand(x - 1, y - 1, data, 2, 2, 0);
 		}
 		else
 		{
@@ -207,7 +211,7 @@ int	emulate_propane(int x, int y, t_data *data)
 		{
 			iter[y - 1][x + 1] += iter[y][x] + 1;
 			iter[y][x] = 0;
-			emulate_sand(x + 1, y - 1, data, 2, 2);
+			emulate_sand(x + 1, y - 1, data, 2, 2, 0);
 		}
 		else
 		{
@@ -272,7 +276,7 @@ int	emulate_fire(int x, int y, t_data *data)
 		{
 			iter[y - 1][x] += iter[y][x] + 1;
 			iter[y][x] = 0;
-			emulate_sand(x, y - 1, data, 2, -3);
+			emulate_sand(x, y - 1, data, 2, -3, 0);
 		}
 		else
 		{
@@ -289,7 +293,7 @@ int	emulate_fire(int x, int y, t_data *data)
 		{
 			iter[y - 1][x - 1] += iter[y][x] + 1;
 			iter[y][x] = 0;
-			emulate_sand(x - 1, y - 1, data, 2, -3);
+			emulate_sand(x - 1, y - 1, data, 2, -3, 0);
 		}
 		else
 		{
@@ -306,7 +310,7 @@ int	emulate_fire(int x, int y, t_data *data)
 		{
 			iter[y - 1][x + 1] += iter[y][x] + 1;
 			iter[y][x] = 0;
-			emulate_sand(x + 1, y - 1, data, 2, -3);
+			emulate_sand(x + 1, y - 1, data, 2, -3, 0);
 		}
 		else
 		{
@@ -397,7 +401,7 @@ int	emulate_gas(int x, int y, t_data *data)
 	return (0);
 }
 
-int	emulate_sand(int x, int y, t_data *data, int randed, int slide)
+int	emulate_sand(int x, int y, t_data *data, int randed, int slide, int force)
 {
 	char	swap;
 	static int iter[WINY][WINX];
@@ -426,7 +430,7 @@ int	emulate_sand(int x, int y, t_data *data, int randed, int slide)
 		{
 			iter[y + 1][x] += iter[y][x] + 1;
 			iter[y][x] = 0;
-			emulate_sand(x, y + 1, data, randed, slide);
+			emulate_sand(x, y + 1, data, randed, slide, force);
 		}
 		else
 		{
@@ -438,7 +442,7 @@ int	emulate_sand(int x, int y, t_data *data, int randed, int slide)
 	while (iter[y][x] > 0 && (data->fsim->map[y + 1][x] >= data->fsim->map[y][x]))
 	{
 		if (rand() % 3)
-			push_inertia(x, y + 1, data, 5);
+			push_inertia(x, y + 1, data, force);
 		i = iter[y][x] + slide;
 		iter[y][x] = 0;
 		direc = equal_flud(x, y, data, data->fsim->map[y][x]);
@@ -464,7 +468,7 @@ int	emulate_sand(int x, int y, t_data *data, int randed, int slide)
 		{
 			iter[y + 1][x - 1] += iter[y][x] + 1;
 			iter[y][x] = 0;
-			emulate_sand(x - 1, y + 1, data, randed, slide);
+			emulate_sand(x - 1, y + 1, data, randed, slide, force);
 		}
 		else
 		{
@@ -483,7 +487,7 @@ int	emulate_sand(int x, int y, t_data *data, int randed, int slide)
 		{
 			iter[y + 1][x + 1] += iter[y][x] + 1;
 			iter[y][x] = 0;
-			emulate_sand(x + 1, y + 1, data, randed, slide);
+			emulate_sand(x + 1, y + 1, data, randed, slide, force);
 		}
 		else
 		{
@@ -506,7 +510,7 @@ void	emulate_water(int x, int y, t_data *data, char c)
 
 	if (flud[y][x] == 0)
 	{
-		if (y < (int)WINY - 2 && emulate_sand(x, y, data, 10, -4) == 1)
+		if (y < (int)WINY - 2 && emulate_sand(x, y, data, 10, -4, 1) == 1)
 			return ;
 	}
 	flud[y][x] = 0;
@@ -514,7 +518,7 @@ void	emulate_water(int x, int y, t_data *data, char c)
 	{
 		data->fsim->map[y][x] = data->fsim->map[y][x - 1];
 		data->fsim->map[y][x - 1] = c;
-		if (rand() % 3 && iter[y][x] < 4)
+		if (rand() % 5 && iter[y][x] < 5)
 		{
 			iter[y][x - 1] += iter[y][x] + 1;
 			iter[y][x] = 0;
@@ -532,7 +536,7 @@ void	emulate_water(int x, int y, t_data *data, char c)
 	{
 		data->fsim->map[y][x] = data->fsim->map[y][x + 1];
 		data->fsim->map[y][x + 1] = c;
-		if (rand() % 3 && iter[y][x] < 4)
+		if (rand() % 5 && iter[y][x] < 5)
 		{
 			iter[y][x + 1] += iter[y][x] + 1;
 			iter[y][x] = 0;
@@ -594,7 +598,7 @@ void	emulate_lava(int x, int y, t_data *data, char c)
 			return ;
 		}
 	}
-	if (y < (int)WINY - 2 && emulate_sand(x, y, data, 1, -2))
+	if (y < (int)WINY - 2 && emulate_sand(x, y, data, 1, -2, 2))
 	{
 		return ;
 	}
@@ -638,7 +642,7 @@ void	emulate_acid(int x, int y, t_data *data, char c)
 			}
 		}
 	}
-	if (y < (int)WINY - 2 && emulate_sand(x, y, data, 10, 1) == 1)
+	if (y < (int)WINY - 2 && emulate_sand(x, y, data, 10, 1, 1) == 1)
 	{
 		return ;
 	}
@@ -736,7 +740,7 @@ void	emulate_oil(int x, int y, t_data *data, char c)
 		data->fsim->map[y][x] = MAT_ID_OILF;
 		return ;
 	}
-	if (y < (int)WINY - 2 && emulate_sand(x, y, data, 4, 3) == 1)
+	if (y < (int)WINY - 2 && emulate_sand(x, y, data, 4, 3, 2) == 1)
 	{
 		return ;
 	}	
@@ -809,7 +813,7 @@ void	emulate_oilf(int x, int y, t_data *data, char c)
 			data->fsim->map[(int)pt.y][(int)pt.x] = MAT_ID_STEAM;
 		}
 	}
-	if (y < (int)WINY - 2 && emulate_sand(x, y, data, 4, 4) == 1)
+	if (y < (int)WINY - 2 && emulate_sand(x, y, data, 4, 4, 1) == 1)
 	{
 		return ;
 	}	
