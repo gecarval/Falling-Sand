@@ -71,7 +71,6 @@
 #define MAT_COL_ACID       0x5AC83C
 
 // STRUCTS
-
 typedef struct s_objinf
 {
 	float_t	pox;

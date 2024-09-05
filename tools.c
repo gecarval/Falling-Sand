@@ -6,7 +6,7 @@
 /*   By: gecarval <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 17:38:51 by gecarval          #+#    #+#             */
-/*   Updated: 2024/09/04 13:45:08 by gecarval         ###   ########.fr       */
+/*   Updated: 2024/09/05 17:23:32 by gecarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,10 +185,6 @@ int	mlx_anim(t_data *data)
 
 int	mlx_cooked(int key, t_data *data)
 {
-	if (key == 'c')
-		data->click_fill = MAT_ID_OIL;
-	if (key == 'x')
-		data->click_fill = MAT_ID_WOOD;
 	if (key == 'q')
 		data->click_fill = MAT_ID_EMPTY;
 	if (key == 'w')
@@ -207,6 +203,10 @@ int	mlx_cooked(int key, t_data *data)
 		data->click_fill = MAT_ID_PROPANE;
 	if (key == 'z')
 		data->click_fill = MAT_ID_ACID;
+	if (key == 'c')
+		data->click_fill = MAT_ID_OIL;
+	if (key == 'x')
+		data->click_fill = MAT_ID_WOOD;
 	if (key == ESC)
 		exit_data(data, 0);
 	if (key == '1')
