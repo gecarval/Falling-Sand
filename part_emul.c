@@ -6,11 +6,78 @@
 /*   By: gecarval <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:28:33 by gecarval          #+#    #+#             */
-/*   Updated: 2024/09/05 20:36:46 by gecarval         ###   ########.fr       */
+/*   Updated: 2024/09/05 21:12:30 by gecarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/renderer.h"
+
+void	push_inertia(int x, int y, t_data *data, int force)
+{
+	int	i;
+	int	l;
+	int	r;
+	int	tmp;
+	int	emp;
+	
+	i = x;
+	r = 0;
+	emp = 0;
+	tmp = force + 1;
+	while (--tmp > 0)
+	{
+		if (i < WINX)
+			if (data->fsim->map[y][i] == data->fsim->map[y - 1][x])
+				r++;
+		if (data->fsim->map[y][i] == MAT_ID_EMPTY)
+		{
+			emp = 1;
+			break ;
+		}
+		i++;
+	}
+	r *= emp;
+	i = x;
+	l = 0;
+	emp = 0;
+	tmp = force + 1;
+	while (--tmp > 0)
+	{
+		if (i > 0)
+			if (data->fsim->map[y][i] == data->fsim->map[y - 1][x])
+				l++;
+		if (data->fsim->map[y][i] == MAT_ID_EMPTY)
+		{
+			emp = 1;
+			break ;
+		}
+		i--;
+	}
+	l *= emp;
+	if (l == 0 && r == 0)
+		return ;
+	if (l == r)
+	{
+		if (rand() % 2)
+			r -= 1;
+		else
+			l -= 1;
+	}
+	while (l > 0)
+	{
+		tmp = data->fsim->map[y][x - l];
+		data->fsim->map[y][x - l] = data->fsim->map[y][x - l + 1];
+		tmp = data->fsim->map[y][x - l + 1] = tmp;
+		l--;
+	}
+	while (r > 0)
+	{
+		tmp = data->fsim->map[y][x + r];
+		data->fsim->map[y][x + r] = data->fsim->map[y][x + r - 1];
+		tmp = data->fsim->map[y][x + r - 1] = tmp;
+		r--;
+	}
+}
 
 int	equal_flud(int x, int y, t_data *data, char c)
 {
@@ -334,12 +401,10 @@ int	emulate_sand(int x, int y, t_data *data, int randed, int slide)
 {
 	char	swap;
 	static int iter[WINY][WINX];
-	//int		fall[WINY][WINX];
 	static int	equal = 0;
 	int		i;
 	int		direc;
 
-	//if (data->fsim->map[y + 1][x] < )
 	if (data->fsim->map[y + 1][x] < data->fsim->map[y][x] && rand() % randed == 0)
 	{
 		if (data->fsim->map[y + 1][x - 1] < data->fsim->map[y + 1][x])
@@ -372,6 +437,8 @@ int	emulate_sand(int x, int y, t_data *data, int randed, int slide)
 	}
 	while (iter[y][x] > 0 && (data->fsim->map[y + 1][x] >= data->fsim->map[y][x]))
 	{
+		if (rand() % 3)
+			push_inertia(x, y + 1, data, 5);
 		i = iter[y][x] + slide;
 		iter[y][x] = 0;
 		direc = equal_flud(x, y, data, data->fsim->map[y][x]);
