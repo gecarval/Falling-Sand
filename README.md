@@ -12,7 +12,9 @@ mais simples imaginar a mesma como uma matriz e muito mais.
 
 Onde a areia (como na figura abaixo), terá a tendência de cair ou ir para baixo se os espaços
 abaixos estiverem vazios.
+
 ![image](https://github.com/user-attachments/assets/2aff4d92-dcd1-4c7f-a88c-612091dca13c)
+
 
 *ÁGUA*
 
@@ -21,6 +23,7 @@ areia e após está ele simula seu comportamento de vazão ou de fluir, vendo es
 na esquerda ou direita e indo para a mesma.
 
 ![image](https://github.com/user-attachments/assets/d1d8a22f-40bb-4a6f-8853-cc9f3660d620)
+
 
 *FILMAGENS*
 
