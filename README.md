@@ -18,7 +18,7 @@ abaixos estiverem vazios.
 
 *ÁGUA*
 
-E por imcremento outras partículas como a água, onde seu comportamento inicial é como da
+E por incremento outras partículas como a água, onde seu comportamento inicial é como da
 areia e após está ele simula seu comportamento de vazão ou de fluir, vendo espaços livres
 na esquerda ou direita e indo para a mesma.
 
