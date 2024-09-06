@@ -34,28 +34,31 @@
 
 // PARTICLES
 #define MAT_ID_EMPTY		(char)48
-#define MAT_ID_STEAM		(char)49
-#define MAT_ID_PROPANE		(char)50
-#define MAT_ID_SMOKE		(char)51
-#define MAT_ID_EMBER		(char)52
-#define MAT_ID_FIRE		(char)53
-#define MAT_ID_SALT		(char)54
-#define MAT_ID_ACID		(char)55
-#define MAT_ID_OIL		(char)56
-#define MAT_ID_OILF		(char)57
-#define MAT_ID_WATER		(char)58
-#define MAT_ID_LAVA		(char)59
-#define MAT_ID_GUNPOWDER	(char)60
-#define MAT_ID_SAND		(char)61
-#define MAT_ID_STONE		(char)62
-#define MAT_ID_WOOD		(char)63
-#define MAT_ID_WOODF		(char)64
-#define MAT_ID_WIND		(char)65
+#define MAT_ID_BUBBLE		(char)49
+#define MAT_ID_STEAM		(char)50
+#define MAT_ID_PROPANE		(char)51
+#define MAT_ID_SMOKE		(char)52
+#define MAT_ID_EMBER		(char)53
+#define MAT_ID_FIRE		(char)54
+#define MAT_ID_SALT		(char)55
+#define MAT_ID_ACID		(char)56
+#define MAT_ID_OIL		(char)57
+#define MAT_ID_OILF		(char)58
+#define MAT_ID_WATER		(char)59
+#define MAT_ID_LAVA		(char)60
+#define MAT_ID_GUNPOWDER	(char)61
+#define MAT_ID_SOAP		(char)62
+#define MAT_ID_SAND		(char)63
+#define MAT_ID_STONE		(char)64
+#define MAT_ID_WOOD		(char)65
+#define MAT_ID_WOODF		(char)66
+#define MAT_ID_WIND		(char)67
 
 // COLOR
 #define MAT_COL_EMPTY      0x000000
 #define MAT_COL_SAND       0xC2B280
 #define MAT_COL_SALT       0xC8B4BE
+#define MAT_COL_BUBBLE     0xCCCCCC
 #define MAT_COL_WATER      0x1464AA
 #define MAT_COL_STONE      0x787078
 #define MAT_COL_WOOD       0xA1662F
@@ -64,6 +67,7 @@
 #define MAT_COL_FIREGLOW   0x400000
 #define MAT_COL_SMOKE      0x323232
 #define MAT_COL_PROPANE    0xDDFFDD
+#define MAT_COL_SOAP       0xAADDAA
 #define MAT_COL_EMBER      0xC87814
 #define MAT_COL_STEAM      0xDCDCFB
 #define MAT_COL_GUNPOWDER  0x3C3C3C
@@ -234,10 +238,12 @@ void	emulate_wood(int x, int y, t_data *data);
 void	emulate_woodf(int x, int y, t_data *data);
 void	emulate_oil(int x, int y, t_data *data, char c);
 void	emulate_oilf(int x, int y, t_data *data, char c);
+void	emulate_soap(int x, int y, t_data *data);
 int		emulate_gas(int x, int y, t_data *data);
 int		emulate_fire(int x, int y, t_data *data);
 int		emulate_sand(int x, int y, t_data *data, int randed, int slide, int force);
 int		emulate_propane(int x, int y, t_data *data);
+int		emulate_soap_bubble(int x, int y, t_data *data);
 // MAP READ
 void	set_height_range(t_map *map, t_pt *cur);
 void	fill_map(t_data *data, t_map *map);

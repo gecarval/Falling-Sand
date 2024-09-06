@@ -6,17 +6,41 @@
 /*   By: gecarval <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 14:24:07 by gecarval          #+#    #+#             */
-/*   Updated: 2024/09/06 10:43:43 by gecarval         ###   ########.fr       */
+/*   Updated: 2024/09/06 12:52:06 by gecarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/renderer.h"
 
+void	post_processing(int x, int y, t_data *data, int id, int col)
+{
+	if (data->fsim->map[y][x + 1] == id)
+	{
+		pixel_to_img(x * 2 + 1, y * 2, data, col);
+		pixel_to_img(x * 2 + 1, y * 2 + 1, data, col);
+	}
+	if (data->fsim->map[y][x - 1] == id)
+	{
+		pixel_to_img(x * 2, y * 2, data, col);
+		pixel_to_img(x * 2, y * 2 + 1, data, col);
+	}
+	if (data->fsim->map[y + 1][x] == id)
+	{
+		pixel_to_img(x * 2, y * 2 + 1, data, col);
+		pixel_to_img(x * 2 + 1, y * 2 + 1, data, col);
+	}
+	if (data->fsim->map[y - 1][x] == id)
+	{
+		pixel_to_img(x * 2, y * 2, data, col);
+		pixel_to_img(x * 2 + 1, y * 2, data, col);
+	}
+}
+
 void	process_material(int x, int y, t_data *data, int col)
 {
 	pixel_to_img(x * 2, y * 2, data, col);
-	pixel_to_img(x * 2 + 1, y * 2, data, col);
 	pixel_to_img(x * 2, y * 2 + 1, data, col);
+	pixel_to_img(x * 2 + 1, y * 2, data, col);
 	pixel_to_img(x * 2 + 1, y * 2 + 1, data, col);
 }
 
@@ -41,6 +65,8 @@ void	render_fluidmap(t_data *data)
 				process_material(x, y, data, MAT_COL_STONE);
 			else if (data->fsim->map[y][x] == MAT_ID_SAND)
 				process_material(x, y, data, MAT_COL_SAND);
+			else if (data->fsim->map[y][x] == MAT_ID_SOAP)
+				process_material(x, y, data, MAT_COL_SOAP);
 			else if (data->fsim->map[y][x] == MAT_ID_GUNPOWDER)
 				process_material(x, y, data, MAT_COL_GUNPOWDER);
 			else if (data->fsim->map[y][x] == MAT_ID_LAVA)
@@ -65,17 +91,13 @@ void	render_fluidmap(t_data *data)
 				process_material(x, y, data, MAT_COL_PROPANE);
 			else if (data->fsim->map[y][x] == MAT_ID_STEAM)
 				process_material(x, y, data, MAT_COL_STEAM);
+			else if (data->fsim->map[y][x] == MAT_ID_BUBBLE)
+				process_material(x, y, data, MAT_COL_EMPTY);
 			else if (data->fsim->map[y][x] == MAT_ID_EMPTY)
 			{
 				process_material(x, y, data, MAT_COL_EMPTY);
-				/*if (data->fsim->map[y][x + 1] == MAT_ID_FIRE)
-					process_material(x, y, data, MAT_COL_FIREGLOW);
-				if (data->fsim->map[y][x - 1] == MAT_ID_FIRE)
-					process_material(x, y, data, MAT_COL_FIREGLOW);
-				if (data->fsim->map[y + 1][x] == MAT_ID_FIRE)
-					process_material(x, y, data, MAT_COL_FIREGLOW);
-				if (data->fsim->map[y - 1][x] == MAT_ID_FIRE)
-					process_material(x, y, data, MAT_COL_FIREGLOW);*/
+				post_processing(x, y, data, MAT_ID_FIRE, MAT_COL_FIREGLOW);
+				post_processing(x, y, data, MAT_ID_BUBBLE, MAT_COL_BUBBLE);
 			}
 		}
 	}
@@ -169,6 +191,8 @@ void	process_gravity(t_data *data)
 				emulate_lava(x, y, data, MAT_ID_LAVA);
 			else if (data->fsim->map[y][x] == MAT_ID_ACID)
 				emulate_acid(x, y, data, MAT_ID_ACID);
+			else if (data->fsim->map[y][x] == MAT_ID_SOAP)
+				emulate_soap(x, y, data);
 			else if (data->fsim->map[y][x] == MAT_ID_SAND)
 				emulate_sand(x, y, data, 2, 3, 3);
 			else if (data->fsim->map[y][x] == MAT_ID_STONE)
@@ -177,6 +201,8 @@ void	process_gravity(t_data *data)
 				emulate_wood(x, y, data);
 			else if (data->fsim->map[y][x] == MAT_ID_WOODF)
 				emulate_woodf(x, y, data);
+			else if (data->fsim->map[y][x] == MAT_ID_BUBBLE)
+				emulate_soap_bubble(x, y, data);
 		}
 	}
 }

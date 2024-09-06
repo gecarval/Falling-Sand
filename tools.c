@@ -6,7 +6,7 @@
 /*   By: gecarval <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 17:38:51 by gecarval          #+#    #+#             */
-/*   Updated: 2024/09/06 10:34:48 by gecarval         ###   ########.fr       */
+/*   Updated: 2024/09/06 12:50:11 by gecarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ void	controls_mark(t_data *data)
 	mlx_string_put(data->ini, data->win, 15, 45, 0xFFFFFF, "Q=Empty ; W=Fire ; E=Steam");
 	mlx_string_put(data->ini, data->win, 15, 60, 0xFFFFFF, "R=Water ; A=Lava ; S=Sand");
 	mlx_string_put(data->ini, data->win, 15, 75, 0xFFFFFF, "D=Stone ; F=Propane ; Z=Acid");
-	mlx_string_put(data->ini, data->win, 15, 90, 0xFFFFFF, "X=WOOD ; C=OIL ; V=");
+	mlx_string_put(data->ini, data->win, 15, 90, 0xFFFFFF, "X=WOOD ; C=OIL ; V=SOAP");
 }
 
 void	render_background(t_data *data, int color)
@@ -203,10 +203,12 @@ int	mlx_cooked(int key, t_data *data)
 		data->click_fill = MAT_ID_PROPANE;
 	if (key == 'z')
 		data->click_fill = MAT_ID_ACID;
-	if (key == 'c')
-		data->click_fill = MAT_ID_OIL;
 	if (key == 'x')
 		data->click_fill = MAT_ID_WOOD;
+	if (key == 'c')
+		data->click_fill = MAT_ID_OIL;
+	if (key == 'v')
+		data->click_fill = MAT_ID_SOAP;
 	if (key == ESC)
 		exit_data(data, 0);
 	if (key == '1')

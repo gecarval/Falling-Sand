@@ -6,7 +6,7 @@
 /*   By: gecarval <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:28:33 by gecarval          #+#    #+#             */
-/*   Updated: 2024/09/05 21:30:42 by gecarval         ###   ########.fr       */
+/*   Updated: 2024/09/06 12:48:56 by gecarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -851,4 +851,120 @@ void	emulate_oilf(int x, int y, t_data *data, char c)
 		}
 		return ;
 	}
+}
+
+void	emulate_soap(int x, int y, t_data *data)
+{
+	t_pt	pt;
+
+	pt = find_id(x, y, data, MAT_ID_WATER);
+	if (pt.z == 1)
+	{
+		if (rand() % 100 == 0)
+		{
+			data->fsim->map[(int)pt.y][(int)pt.x] = MAT_ID_EMPTY;
+			data->fsim->map[y][x] = MAT_ID_BUBBLE;
+			return ;
+		}
+		if (rand() % 100 == 0)
+		{
+			data->fsim->map[y][x] = MAT_ID_BUBBLE;
+			return ;
+		}
+	}
+	if (y < (int)WINY - 2 && emulate_sand(x, y, data, 1, 2, 1))
+	{
+		return ;
+	}
+}
+
+int	emulate_soap_bubble(int x, int y, t_data *data)
+{
+	char	swap;
+	static int iter[WINY][WINX];
+	int	i;
+	int	j;
+
+	i = y + 2;
+	while (--i >= y - 1)
+	{
+		j = x - 2;
+		while (++j <= x + 1)
+		{
+			if (data->fsim->map[i][j] != MAT_ID_EMPTY)
+			{
+				if (rand() % 50 == 0)
+				{
+					data->fsim->map[y][x] = MAT_ID_EMPTY;
+					return (1);
+				}
+			}
+		}
+	}
+	if (rand() % 3 == 0)
+		return (1);
+	if (data->fsim->map[y - 1][x] < data->fsim->map[y][x] && rand() % 2)
+	{
+		if (data->fsim->map[y - 1][x - 1] == MAT_ID_EMPTY)
+		{
+			swap = data->fsim->map[y - 1][x - 1];
+			data->fsim->map[y - 1][x - 1] = data->fsim->map[y - 1][x];
+			data->fsim->map[y - 1][x] = swap;
+		}
+		else if (data->fsim->map[y - 1][x + 1] == MAT_ID_EMPTY)
+		{
+			swap = data->fsim->map[y - 1][x + 1];
+			data->fsim->map[y - 1][x + 1] = data->fsim->map[y - 1][x];
+			data->fsim->map[y - 1][x] = swap;
+		}
+		swap = data->fsim->map[y - 1][x];
+		data->fsim->map[y - 1][x] = data->fsim->map[y][x];
+		data->fsim->map[y][x] = swap;
+		if (rand() % 4 && iter[y][x] < 3)
+		{
+			iter[y - 1][x] += iter[y][x] + 1;
+			iter[y][x] = 0;
+			emulate_sand(x, y - 1, data, 2, 2, 0);
+		}
+		else
+		{
+			iter[y][x] = 0;
+			return (1);
+		}
+	}	
+	else if (data->fsim->map[y - 1][x - 1] < data->fsim->map[y][x] && rand() % 3)
+	{
+		swap = data->fsim->map[y - 1][x - 1];
+		data->fsim->map[y - 1][x - 1] = data->fsim->map[y][x];
+		data->fsim->map[y][x] = swap;
+		if (rand() % 4 && iter[y][x] < 3)
+		{
+			iter[y - 1][x - 1] += iter[y][x] + 1;
+			iter[y][x] = 0;
+			emulate_sand(x - 1, y - 1, data, 2, 2, 0);
+		}
+		else
+		{
+			iter[y][x] = 0;
+			return (1);
+		}
+	}	
+	else if (data->fsim->map[y - 1][x + 1] < data->fsim->map[y][x])
+	{
+		swap = data->fsim->map[y - 1][x + 1];
+		data->fsim->map[y - 1][x + 1] = data->fsim->map[y][x];
+		data->fsim->map[y][x] = swap;
+		if (rand() % 4 && iter[y][x] < 3)
+		{
+			iter[y - 1][x + 1] += iter[y][x] + 1;
+			iter[y][x] = 0;
+			emulate_sand(x + 1, y - 1, data, 2, 2, 0);
+		}
+		else
+		{
+			iter[y][x] = 0;
+			return (1);
+		}
+	}
+	return (0);
 }
