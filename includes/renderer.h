@@ -254,7 +254,7 @@ void	emulate_soap(int x, int y, t_data *data);
 int		emulate_gas(int x, int y, t_data *data);
 int		emulate_fire(int x, int y, t_data *data);
 int		emulate_fall(int x, int y, t_data *data, int randed, int slide, int force);
-int		emulate_solid(int x, int y, t_data *data, int randed, int slide, int force, int inertialweak, int inertialres);
+int		emulate_solid(int x, int y, t_data *data, int randed, int slide, int force, int inertialchance, int inertialres);
 int		emulate_propane(int x, int y, t_data *data);
 int		emulate_soap_bubble(int x, int y, t_data *data);
 int		emulate_oxygen(int x, int y, t_data *data);

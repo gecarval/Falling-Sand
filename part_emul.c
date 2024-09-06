@@ -6,7 +6,7 @@
 /*   By: gecarval <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:28:33 by gecarval          #+#    #+#             */
-/*   Updated: 2024/09/06 21:19:05 by gecarval         ###   ########.fr       */
+/*   Updated: 2024/09/06 21:23:05 by gecarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -401,7 +401,7 @@ int	emulate_gas(int x, int y, t_data *data)
 	return (0);
 }
 
-int	emulate_solid(int x, int y, t_data *data, int randed, int slide, int force, int inertialweak, int inertialres)
+int	emulate_solid(int x, int y, t_data *data, int randed, int slide, int force, int inertialchance, int inertialres)
 {
 	char		swap;
 	static int	stable[WINY][WINX];
@@ -445,7 +445,7 @@ int	emulate_solid(int x, int y, t_data *data, int randed, int slide, int force, 
 		{
 			iter[y + 1][x] += iter[y][x] + 1;
 			iter[y][x] = 0;
-			emulate_solid(x, y + 1, data, randed, slide, force, inertialweak, inertialres);
+			emulate_solid(x, y + 1, data, randed, slide, force, inertialchance, inertialres);
 		}
 		else
 		{
@@ -485,7 +485,7 @@ int	emulate_solid(int x, int y, t_data *data, int randed, int slide, int force, 
 			{
 				iter[y + 1][x - 1] += iter[y][x] + 1;
 				iter[y][x] = 0;
-				emulate_solid(x - 1, y + 1, data, randed, slide, force, inertialweak, inertialres);
+				emulate_solid(x - 1, y + 1, data, randed, slide, force, inertialchance, inertialres);
 			}
 			else
 			{
@@ -504,7 +504,7 @@ int	emulate_solid(int x, int y, t_data *data, int randed, int slide, int force, 
 			{
 				iter[y + 1][x + 1] += iter[y][x] + 1;
 				iter[y][x] = 0;
-				emulate_solid(x + 1, y + 1, data, randed, slide, force, inertialweak, inertialres);
+				emulate_solid(x + 1, y + 1, data, randed, slide, force, inertialchance, inertialres);
 			}
 			else
 			{
@@ -518,7 +518,7 @@ int	emulate_solid(int x, int y, t_data *data, int randed, int slide, int force, 
 		equal = 1;
 	else
 		equal = 0;
-	if (rand() % inertialweak == 0)
+	if (rand() % inertialchance)
 		stable[y][x] = 1;
 	return (0);
 }
@@ -1012,7 +1012,7 @@ void	emulate_soap(int x, int y, t_data *data)
 			return ;
 		}
 	}
-	if (y < (int)WINY - 2 && emulate_solid(x, y, data, 1, 2, 1, 2, 3))
+	if (y < (int)WINY - 2 && emulate_solid(x, y, data, 1, 2, 1, 3, 3))
 	{
 		return ;
 	}
