@@ -6,7 +6,7 @@
 /*   By: gecarval <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:28:33 by gecarval          #+#    #+#             */
-/*   Updated: 2024/09/06 19:43:13 by gecarval         ###   ########.fr       */
+/*   Updated: 2024/09/06 20:25:45 by gecarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -554,8 +554,8 @@ void	emulate_water(int x, int y, t_data *data, char c)
 
 void	emulate_steam(int x, int y, t_data *data, char c)
 {
-	t_pt		pt;
 	static int	time;
+	t_pt		pt;
 
 	if (y > 1 && emulate_gas(x, y, data) == 1)
 		return ;
@@ -648,7 +648,7 @@ void	emulate_acid(int x, int y, t_data *data, char c)
 		{
 			if (data->fsim->map[i][j] != MAT_ID_EMPTY
 				&& data->fsim->map[i][j] != MAT_ID_ACID
-				&& data->fsim->map[i][j] != 'G')
+				&& data->fsim->map[i][j] != 'z')
 			{
 				if (rand() % 500 == 0)
 					data->fsim->map[i][j] = MAT_ID_EMPTY;
@@ -1228,7 +1228,7 @@ int	emulate_fly(int x, int y, t_data *data)
 	if (pt.z == 1)
 		if (rand() % 1000)
 			return (1);
-	if (data->fsim->map[y + 1][x] < data->fsim->map[y][x] && rand() % 20 == 0)
+	if (data->fsim->map[y + 1][x] < data->fsim->map[y][x] && rand() % 30 == 0)
 	{
 		swap = data->fsim->map[y + 1][x];
 		data->fsim->map[y + 1][x] = data->fsim->map[y][x];
@@ -1262,7 +1262,7 @@ int	emulate_fly(int x, int y, t_data *data)
 		swap = data->fsim->map[y - 1][x];
 		data->fsim->map[y - 1][x] = data->fsim->map[y][x];
 		data->fsim->map[y][x] = swap;
-		if (rand() % 3 && iter[y][x] < 3)
+		if (rand() % 2 && iter[y][x] < 3)
 		{
 			iter[y - 1][x] += iter[y][x] + 1;
 			iter[y][x] = 0;
@@ -1279,7 +1279,7 @@ int	emulate_fly(int x, int y, t_data *data)
 		swap = data->fsim->map[y - 1][x - 1];
 		data->fsim->map[y - 1][x - 1] = data->fsim->map[y][x];
 		data->fsim->map[y][x] = swap;
-		if (rand() % 3 && iter[y][x] < 3)
+		if (rand() % 2 && iter[y][x] < 3)
 		{
 			iter[y - 1][x - 1] += iter[y][x] + 1;
 			iter[y][x] = 0;
@@ -1296,7 +1296,7 @@ int	emulate_fly(int x, int y, t_data *data)
 		swap = data->fsim->map[y - 1][x + 1];
 		data->fsim->map[y - 1][x + 1] = data->fsim->map[y][x];
 		data->fsim->map[y][x] = swap;
-		if (rand() % 3 && iter[y][x] < 3)
+		if (rand() % 2 && iter[y][x] < 3)
 		{
 			iter[y - 1][x + 1] += iter[y][x] + 1;
 			iter[y][x] = 0;
