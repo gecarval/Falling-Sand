@@ -6,7 +6,7 @@
 /*   By: gecarval <gecarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 20:32:15 by gecarval          #+#    #+#             */
-/*   Updated: 2024/09/06 10:33:15 by gecarval         ###   ########.fr       */
+/*   Updated: 2024/09/06 14:15:04 by gecarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,40 +14,39 @@
 
 int	exit_data(t_data *data, int fd)
 {
-	if (data->img->img_ptr != NULL)
+	if (data != NULL && data->img != NULL && data->img->img_ptr != NULL)
 		mlx_destroy_image(data->ini, data->img->img_ptr);
-	if (data->img != NULL)
+	if (data != NULL && data->img != NULL)
 		free(data->img);
-	if (data->fsim->map != NULL)
+	if (data != NULL && data->fsim && data->fsim->map != NULL)
 		ft_free_matrix(data->fsim->map);
-	if (data->fsim != NULL)
+	if (data != NULL && data->fsim != NULL)
 		free(data->fsim);
-	if (data->map->rotx != NULL)
+	if (data != NULL && data->map != NULL && data->map->rotx != NULL)
 		free(data->map->rotx);
-	if (data->map->roty != NULL)
+	if (data != NULL && data->map != NULL && data->map->roty != NULL)
 		free(data->map->roty);
-	if (data->map->rotz != NULL)
+	if (data != NULL && data->map != NULL && data->map->rotz != NULL)
 		free(data->map->rotz);
-	if (data->map->prj != NULL)
+	if (data != NULL && data->map != NULL && data->map->prj != NULL)
 		free(data->map->prj);
-	if (data->map->mapz != NULL)
+	if (data != NULL && data->map != NULL && data->map->mapz != NULL)
 		free(data->map->mapz);
-	if (data->map->parsed_file != NULL)
+	if (data != NULL && data->map != NULL && data->map->parsed_file != NULL)
 		ft_free_matrix(data->map->parsed_file);
-	if (data->map != NULL)
+	if (data != NULL && data->map != NULL)
 		free(data->map);
-	if (data->original_map->mapz != NULL)
+	if (data != NULL && data->original_map != NULL && data->original_map->mapz != NULL)
 		free(data->original_map->mapz);
-	if (data->original_map != NULL)
+	if (data != NULL && data->original_map != NULL)
 		free(data->original_map);
-	if (data->win != NULL)
+	if (data != NULL && data->win != NULL)
 		mlx_clear_window(data->ini, data->win);
-	if (data->win != NULL)
+	if (data != NULL && data->win != NULL)
 		mlx_destroy_window(data->ini, data->win);
-	data->win = NULL;
-	if (data->ini != NULL)
+	if (data != NULL && data->ini != NULL)
 		mlx_destroy_display(data->ini);
-	if (data->ini != NULL)
+	if (data != NULL && data->ini != NULL)
 		free(data->ini);
 	if (data != NULL)
 		free(data);
