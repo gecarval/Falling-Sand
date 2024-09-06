@@ -6,7 +6,7 @@
 /*   By: gecarval <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 17:38:51 by gecarval          #+#    #+#             */
-/*   Updated: 2024/09/06 17:25:21 by gecarval         ###   ########.fr       */
+/*   Updated: 2024/09/06 19:13:01 by gecarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ void	controls_mark(t_data *data)
 	mlx_string_put(data->ini, data->win, 15, 60, 0xFFFFFF, "R=Water ; A=Lava ; S=Sand");
 	mlx_string_put(data->ini, data->win, 15, 75, 0xFFFFFF, "D=Stone ; F=Propane ; Z=Acid");
 	mlx_string_put(data->ini, data->win, 15, 90, 0xFFFFFF, "X=WOOD ; C=OIL ; V=SOAP");
-	mlx_string_put(data->ini, data->win, 15, 105, 0xFFFFFF, "T=OXYGEN ; Y=HIDROGEN ; U=");
+	mlx_string_put(data->ini, data->win, 15, 105, 0xFFFFFF, "T=OXYGEN ; Y=HIDROGEN ; U=Fly");
 }
 
 void	render_background(t_data *data, int color)
@@ -214,6 +214,8 @@ int	mlx_cooked(int key, t_data *data)
 		data->click_fill = MAT_ID_OXYGEN;
 	if (key == 'y')
 		data->click_fill = MAT_ID_HIDROGEN;
+	if (key == 'u')
+		data->click_fill = MAT_ID_FLY;
 	if (key == ESC)
 		exit_data(data, 0);
 	if (key == '1')

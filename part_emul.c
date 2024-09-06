@@ -6,7 +6,7 @@
 /*   By: gecarval <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:28:33 by gecarval          #+#    #+#             */
-/*   Updated: 2024/09/06 17:52:26 by gecarval         ###   ########.fr       */
+/*   Updated: 2024/09/06 19:43:13 by gecarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -232,7 +232,7 @@ int	emulate_fire(int x, int y, t_data *data)
 		return (1);
 	if (rand() % 100 == 0)
 	{
-		data->fsim->map[y][x] = MAT_ID_EMPTY;
+		data->fsim->map[y][x] = MAT_ID_SMOKE;
 		return (1);
 	}
 	pt = find_id(x, y, data, MAT_ID_FIRE);
@@ -554,11 +554,29 @@ void	emulate_water(int x, int y, t_data *data, char c)
 
 void	emulate_steam(int x, int y, t_data *data, char c)
 {
+	t_pt		pt;
+	static int	time;
+
 	if (y > 1 && emulate_gas(x, y, data) == 1)
 		return ;
 	if (rand() % 1000 == 0 && data->fsim->map[y][x] == c)
 	{
 		data->fsim->map[y][x] = MAT_ID_WATER;
+		return ;
+	}
+	if (time >= 1000000)
+		data->fsim->map[y][x] = MAT_ID_FOG;
+	else
+		time++;
+	pt = find_id(x, y, data, MAT_ID_FOG);
+	if (pt.z == 1)
+		data->fsim->map[y][x] = MAT_ID_FOG;
+	if (pt.z == 1)
+	{
+		time = 0;
+		pt = find_id(x, y, data, MAT_ID_STEAM);
+		if (pt.z == 1)
+			emulate_steam((int)pt.x, (int)pt.y, data, c);
 		return ;
 	}
 	if ((data->fsim->map[y][x - 1] < c && rand() % 2) && (data->fsim->map[y][x] == c && equal_flud(x, y, data, c) == 0))
@@ -999,10 +1017,27 @@ int	emulate_oxygen(int x, int y, t_data *data)
 			return (1);
 		}
 	}
-	pt = find_around_id(x, y, data, MAT_ID_OXYGEN);
+	pt = find_around_id(x, y, data, MAT_ID_OXYGEN, 1);
 	if (pt.z == 0)
 		if (rand() % 3)
 			return (1);
+	if (data->fsim->map[y + 1][x] < data->fsim->map[y][x] && rand() % 20 == 0)
+	{
+		swap = data->fsim->map[y + 1][x];
+		data->fsim->map[y + 1][x] = data->fsim->map[y][x];
+		data->fsim->map[y][x] = swap;
+		if (rand() % 3 && iter[y][x] < 3)
+		{
+			iter[y + 1][x] += iter[y][x] + 1;
+			iter[y][x] = 0;
+			emulate_sand(x, y + 1, data, 2, 2, 0);
+		}
+		else
+		{
+			iter[y][x] = 0;
+			return (1);
+		}
+	}
 	if (data->fsim->map[y - 1][x] < data->fsim->map[y][x] && rand() % 2)
 	{
 		if (data->fsim->map[y - 1][x - 1] == MAT_ID_EMPTY)
@@ -1088,10 +1123,27 @@ int	emulate_hidrogen(int x, int y, t_data *data)
 			emulate_hidrogen((int)pt.x, (int)pt.y, data);
 		return (1);
 	}
-	pt = find_around_id(x, y, data, MAT_ID_HIDROGEN);
+	pt = find_around_id(x, y, data, MAT_ID_HIDROGEN, 1);
 	if (pt.z == 0)
 		if (rand() % 3)
 			return (1);
+	if (data->fsim->map[y + 1][x] < data->fsim->map[y][x] && rand() % 20 == 0)
+	{
+		swap = data->fsim->map[y + 1][x];
+		data->fsim->map[y + 1][x] = data->fsim->map[y][x];
+		data->fsim->map[y][x] = swap;
+		if (rand() % 3 && iter[y][x] < 3)
+		{
+			iter[y + 1][x] += iter[y][x] + 1;
+			iter[y][x] = 0;
+			emulate_sand(x, y + 1, data, 2, 2, 0);
+		}
+		else
+		{
+			iter[y][x] = 0;
+			return (1);
+		}
+	}
 	if (data->fsim->map[y - 1][x] < data->fsim->map[y][x] && rand() % 2)
 	{
 		if (data->fsim->map[y - 1][x - 1] == MAT_ID_EMPTY)
@@ -1171,16 +1223,230 @@ int	emulate_fly(int x, int y, t_data *data)
 	if (pt.z == 1)
 		data->fsim->map[y][x] = MAT_ID_FIRE;
 	if (pt.z == 1)
-	{
-		pt = find_id(x, y, data, MAT_ID_HIDROGEN);
-		if (pt.z == 1)
-			emulate_hidrogen((int)pt.x, (int)pt.y, data);
 		return (1);
-	}
-	pt = find_around_id(x, y, data, MAT_ID_WOOD);
+	pt = find_around_id(x, y, data, MAT_ID_WOOD, 1);
 	if (pt.z == 1)
 		if (rand() % 1000)
 			return (1);
+	if (data->fsim->map[y + 1][x] < data->fsim->map[y][x] && rand() % 20 == 0)
+	{
+		swap = data->fsim->map[y + 1][x];
+		data->fsim->map[y + 1][x] = data->fsim->map[y][x];
+		data->fsim->map[y][x] = swap;
+		if (rand() % 3 && iter[y][x] < 3)
+		{
+			iter[y + 1][x] += iter[y][x] + 1;
+			iter[y][x] = 0;
+			emulate_sand(x, y + 1, data, 2, 2, 0);
+		}
+		else
+		{
+			iter[y][x] = 0;
+			return (1);
+		}
+	}
+	if (data->fsim->map[y - 1][x] < data->fsim->map[y][x] && rand() % 2)
+	{
+		if (data->fsim->map[y - 1][x - 1] == MAT_ID_EMPTY)
+		{
+			swap = data->fsim->map[y - 1][x - 1];
+			data->fsim->map[y - 1][x - 1] = data->fsim->map[y - 1][x];
+			data->fsim->map[y - 1][x] = swap;
+		}
+		else if (data->fsim->map[y - 1][x + 1] == MAT_ID_EMPTY)
+		{
+			swap = data->fsim->map[y - 1][x + 1];
+			data->fsim->map[y - 1][x + 1] = data->fsim->map[y - 1][x];
+			data->fsim->map[y - 1][x] = swap;
+		}
+		swap = data->fsim->map[y - 1][x];
+		data->fsim->map[y - 1][x] = data->fsim->map[y][x];
+		data->fsim->map[y][x] = swap;
+		if (rand() % 3 && iter[y][x] < 3)
+		{
+			iter[y - 1][x] += iter[y][x] + 1;
+			iter[y][x] = 0;
+			emulate_sand(x, y - 1, data, 2, 2, 0);
+		}
+		else
+		{
+			iter[y][x] = 0;
+			return (1);
+		}
+	}	
+	else if (data->fsim->map[y - 1][x - 1] < data->fsim->map[y][x] && rand() % 2)
+	{
+		swap = data->fsim->map[y - 1][x - 1];
+		data->fsim->map[y - 1][x - 1] = data->fsim->map[y][x];
+		data->fsim->map[y][x] = swap;
+		if (rand() % 3 && iter[y][x] < 3)
+		{
+			iter[y - 1][x - 1] += iter[y][x] + 1;
+			iter[y][x] = 0;
+			emulate_sand(x - 1, y - 1, data, 2, 2, 0);
+		}
+		else
+		{
+			iter[y][x] = 0;
+			return (1);
+		}
+	}	
+	else if (data->fsim->map[y - 1][x + 1] < data->fsim->map[y][x])
+	{
+		swap = data->fsim->map[y - 1][x + 1];
+		data->fsim->map[y - 1][x + 1] = data->fsim->map[y][x];
+		data->fsim->map[y][x] = swap;
+		if (rand() % 3 && iter[y][x] < 3)
+		{
+			iter[y - 1][x + 1] += iter[y][x] + 1;
+			iter[y][x] = 0;
+			emulate_sand(x + 1, y - 1, data, 2, 2, 0);
+		}
+		else
+		{
+			iter[y][x] = 0;
+			return (1);
+		}
+	}
+	return (0);
+}
+
+int	emulate_smoke(int x, int y, t_data *data)
+{
+	char	swap;
+	static int iter[WINY][WINX];
+	t_pt	pt;
+
+	pt = find_around_id(x, y, data, MAT_ID_SMOKE, 1);
+	if (pt.z == 1)
+		if (rand() % 2)
+			return (1);
+	if (rand() % 4 == 0)
+		return (1);
+	if (rand() % 100 == 0)
+	{
+		data->fsim->map[y][x] = MAT_ID_EMPTY;
+		return (1);
+	}
+	if (data->fsim->map[y - 1][x] < data->fsim->map[y][x] && rand() % 4)
+	{
+		swap = data->fsim->map[y - 1][x];
+		data->fsim->map[y - 1][x] = data->fsim->map[y][x];
+		data->fsim->map[y][x] = swap;
+		if (rand() % 4 && iter[y][x] < 3)
+		{
+			iter[y + 1][x] += iter[y][x] + 1;
+			iter[y][x] = 0;
+			emulate_gas(x, y - 1, data);
+		}
+		else
+		{
+			iter[y][x] = 0;
+			return (1);
+		}
+	}
+	if (data->fsim->map[y + 1][x] < data->fsim->map[y][x] && rand() % 2)
+	{
+		if (data->fsim->map[y + 1][x - 1] == MAT_ID_EMPTY)
+		{
+			swap = data->fsim->map[y + 1][x - 1];
+			data->fsim->map[y + 1][x - 1] = data->fsim->map[y + 1][x];
+			data->fsim->map[y + 1][x] = swap;
+		}
+		else if (data->fsim->map[y + 1][x + 1] == MAT_ID_EMPTY)
+		{
+			swap = data->fsim->map[y + 1][x + 1];
+			data->fsim->map[y + 1][x + 1] = data->fsim->map[y + 1][x];
+			data->fsim->map[y + 1][x] = swap;
+		}
+		swap = data->fsim->map[y + 1][x];
+		data->fsim->map[y + 1][x] = data->fsim->map[y][x];
+		data->fsim->map[y][x] = swap;
+		if (rand() % 3 && iter[y][x] < 3)
+		{
+			iter[y + 1][x] += iter[y][x] + 1;
+			iter[y][x] = 0;
+			emulate_gas(x, y + 1, data);
+		}
+		else
+		{
+			iter[y][x] = 0;
+			return (1);
+		}
+	}	
+	else if (data->fsim->map[y + 1][x - 1] < data->fsim->map[y][x] && rand() % 2)
+	{
+		swap = data->fsim->map[y + 1][x - 1];
+		data->fsim->map[y + 1][x - 1] = data->fsim->map[y][x];
+		data->fsim->map[y][x] = swap;
+		if (rand() % 3 && iter[y][x] < 3)
+		{
+			iter[y + 1][x - 1] += iter[y][x] + 1;
+			iter[y][x] = 0;
+			emulate_gas(x - 1, y + 1, data);
+		}
+		else
+		{
+			iter[y][x] = 0;
+			return (1);
+		}
+	}	
+	else if (data->fsim->map[y + 1][x + 1] < data->fsim->map[y][x])
+	{
+		swap = data->fsim->map[y + 1][x + 1];
+		data->fsim->map[y + 1][x + 1] = data->fsim->map[y][x];
+		data->fsim->map[y][x] = swap;
+		if (rand() % 3 && iter[y][x] < 3)
+		{
+			iter[y + 1][x + 1] += iter[y][x] + 1;
+			iter[y][x] = 0;
+			emulate_gas(x + 1, y + 1, data);
+		}
+		else
+		{
+			iter[y][x] = 0;
+			return (1);
+		}
+	}
+	return (0);
+}
+
+int	emulate_fog(int x, int y, t_data *data)
+{
+	char	swap;
+	static int iter[WINY][WINX];
+	t_pt	pt;
+
+	pt = find_id(x, y, data, MAT_ID_WATER);
+	if (pt.z == 1)
+	{
+		if (rand() % 100 == 0)
+		{
+			data->fsim->map[y][x] = MAT_ID_WATER;
+			return (1);
+		}
+	}
+	pt = find_around_id(x, y, data, MAT_ID_FOG, 1);
+	if (pt.z == 0)
+		if (rand() % 3)
+			return (1);
+	if (data->fsim->map[y + 1][x] < data->fsim->map[y][x] && rand() % 4 == 0)
+	{
+		swap = data->fsim->map[y + 1][x];
+		data->fsim->map[y + 1][x] = data->fsim->map[y][x];
+		data->fsim->map[y][x] = swap;
+		if (rand() % 3 && iter[y][x] < 3)
+		{
+			iter[y + 1][x] += iter[y][x] + 1;
+			iter[y][x] = 0;
+			emulate_sand(x, y + 1, data, 2, 2, 0);
+		}
+		else
+		{
+			iter[y][x] = 0;
+			return (1);
+		}
+	}
 	if (data->fsim->map[y - 1][x] < data->fsim->map[y][x] && rand() % 2)
 	{
 		if (data->fsim->map[y - 1][x - 1] == MAT_ID_EMPTY)

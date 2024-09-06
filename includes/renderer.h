@@ -39,22 +39,24 @@
 #define MAT_ID_BUBBLE		(char)51
 #define MAT_ID_STEAM		(char)52
 #define MAT_ID_PROPANE		(char)53
-#define MAT_ID_SMOKE		(char)54
-#define MAT_ID_EMBER		(char)55
-#define MAT_ID_FIRE		(char)56
-#define MAT_ID_SALT		(char)57
-#define MAT_ID_ACID		(char)58
-#define MAT_ID_OIL		(char)59
-#define MAT_ID_OILF		(char)60
-#define MAT_ID_WATER		(char)61
-#define MAT_ID_LAVA		(char)62
-#define MAT_ID_GUNPOWDER	(char)63
-#define MAT_ID_SOAP		(char)64
-#define MAT_ID_SAND		(char)65
-#define MAT_ID_STONE		(char)66
-#define MAT_ID_WOOD		(char)67
-#define MAT_ID_WOODF		(char)68
-#define MAT_ID_WIND		(char)69
+#define MAT_ID_EMBER		(char)54
+#define MAT_ID_FIRE		(char)55
+#define MAT_ID_SMOKE		(char)56
+#define MAT_ID_FOG		(char)57
+#define MAT_ID_FLY		(char)58
+#define MAT_ID_SALT		(char)59
+#define MAT_ID_ACID		(char)60
+#define MAT_ID_OIL		(char)61
+#define MAT_ID_OILF		(char)62
+#define MAT_ID_WATER		(char)63
+#define MAT_ID_LAVA		(char)64
+#define MAT_ID_GUNPOWDER	(char)65
+#define MAT_ID_SOAP		(char)66
+#define MAT_ID_SAND		(char)67
+#define MAT_ID_STONE		(char)68
+#define MAT_ID_WOOD		(char)69
+#define MAT_ID_WOODF		(char)70
+#define MAT_ID_WIND		(char)71
 
 // COLOR
 #define MAT_COL_EMPTY      0x000000
@@ -62,13 +64,15 @@
 #define MAT_COL_SALT       0xC8B4BE
 #define MAT_COL_BUBBLE     0xCCCCCC
 #define MAT_COL_HIDROGEN   0xAAAAAA
+#define MAT_COL_FOG        0x777777
+#define MAT_COL_FLY        0x999999
 #define MAT_COL_OXYGEN     0x0a3299
 #define MAT_COL_WATER      0x1464AA
 #define MAT_COL_STONE      0x787078
 #define MAT_COL_WOOD       0xA1662F
 #define MAT_COL_WOODF      0xFF662F
-#define MAT_COL_FIRE       0x961400
 #define MAT_COL_SMOKE      0x323232
+#define MAT_COL_FIRE       0x961400
 #define MAT_COL_PROPANE    0xDDFFDD
 #define MAT_COL_SOAP       0xAADDAA
 #define MAT_COL_EMBER      0xC87814
@@ -82,6 +86,7 @@
 #define MAT_COL_HIDROGENG   0x777777
 #define MAT_COL_OXYGENG     0x071F55
 #define MAT_COL_FIREG       0x400000
+#define MAT_COL_FOGG        0x444444
 // STRUCTS
 typedef struct s_objinf
 {
@@ -235,7 +240,7 @@ void	put_mat(int x, int y, t_data *data);
 void	process_gravity_r(t_data *data);
 void	process_gravity(t_data *data);
 t_pt	find_id(int x, int y, t_data *data, char c);
-t_pt	find_around_id(int x, int y, t_data *data, char c);
+t_pt	find_around_id(int x, int y, t_data *data, char c, int dist);
 // MATS BEHAVIOR
 void	emulate_water(int x, int y, t_data *data, char c);
 void	emulate_steam(int x, int y, t_data *data, char c);
@@ -253,6 +258,9 @@ int		emulate_propane(int x, int y, t_data *data);
 int		emulate_soap_bubble(int x, int y, t_data *data);
 int		emulate_oxygen(int x, int y, t_data *data);
 int		emulate_hidrogen(int x, int y, t_data *data);
+int		emulate_smoke(int x, int y, t_data *data);
+int		emulate_fog(int x, int y, t_data *data);
+int		emulate_fly(int x, int y, t_data *data);
 // MAP READ
 void	set_height_range(t_map *map, t_pt *cur);
 void	fill_map(t_data *data, t_map *map);

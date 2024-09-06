@@ -6,7 +6,7 @@
 /*   By: gecarval <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 20:37:31 by gecarval          #+#    #+#             */
-/*   Updated: 2024/08/30 18:24:46 by gecarval         ###   ########.fr       */
+/*   Updated: 2024/09/06 19:10:04 by gecarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,9 @@ void	create_fsim(t_data *data)
 		while (++j < WINX)
 		{
 			if (i == 0 || i == (WINY - 1))
-				data->fsim->map[i][j] = 'G';
+				data->fsim->map[i][j] = 'z';
 			else if (j == 0 || j == (WINX - 1))
-				data->fsim->map[i][j] = 'G';
+				data->fsim->map[i][j] = 'z';
 			else
 				data->fsim->map[i][j] = '0';
 		}
