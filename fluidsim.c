@@ -6,7 +6,7 @@
 /*   By: gecarval <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 14:24:07 by gecarval          #+#    #+#             */
-/*   Updated: 2024/09/06 12:52:06 by gecarval         ###   ########.fr       */
+/*   Updated: 2024/09/06 17:41:42 by gecarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,11 +93,17 @@ void	render_fluidmap(t_data *data)
 				process_material(x, y, data, MAT_COL_STEAM);
 			else if (data->fsim->map[y][x] == MAT_ID_BUBBLE)
 				process_material(x, y, data, MAT_COL_EMPTY);
+			else if (data->fsim->map[y][x] == MAT_ID_OXYGEN)
+				process_material(x, y, data, MAT_COL_OXYGEN);
+			else if (data->fsim->map[y][x] == MAT_ID_HIDROGEN)
+				process_material(x, y, data, MAT_COL_HIDROGEN);
 			else if (data->fsim->map[y][x] == MAT_ID_EMPTY)
 			{
 				process_material(x, y, data, MAT_COL_EMPTY);
-				post_processing(x, y, data, MAT_ID_FIRE, MAT_COL_FIREGLOW);
+				post_processing(x, y, data, MAT_ID_FIRE, MAT_COL_FIREG);
 				post_processing(x, y, data, MAT_ID_BUBBLE, MAT_COL_BUBBLE);
+				post_processing(x, y, data, MAT_ID_HIDROGEN, MAT_COL_HIDROGENG);
+				post_processing(x, y, data, MAT_ID_OXYGEN, MAT_COL_OXYGENG);
 			}
 		}
 	}
@@ -164,6 +170,36 @@ t_pt	find_id(int x, int y, t_data *data, char c)
 	return (pt);
 }
 
+t_pt	find_around_id(int x, int y, t_data *data, char c)
+{
+	int	i;
+	int	j;
+	t_pt	pt;
+
+	pt.z = 0;
+	i = y + 1;
+	while (i >= y - 1)
+	{
+		j = x - 1;
+		while (j <= x + 1)
+		{
+			if (!(x == j && y == i))
+			{
+				if (data->fsim->map[i][j] == c)
+				{
+					pt.x = j;
+					pt.y = i;
+					pt.z = 1;
+					return (pt);
+				}
+			}
+			j++;
+		}
+		i--;
+	}
+	return (pt);
+}
+
 void	process_gravity(t_data *data)
 {
 	int	y;
@@ -203,6 +239,10 @@ void	process_gravity(t_data *data)
 				emulate_woodf(x, y, data);
 			else if (data->fsim->map[y][x] == MAT_ID_BUBBLE)
 				emulate_soap_bubble(x, y, data);
+			else if (data->fsim->map[y][x] == MAT_ID_OXYGEN)
+				emulate_oxygen(x, y, data);
+			else if (data->fsim->map[y][x] == MAT_ID_HIDROGEN)
+				emulate_hidrogen(x, y, data);
 		}
 	}
 }
