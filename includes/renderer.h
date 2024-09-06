@@ -25,10 +25,10 @@
 # include "../libft/libft.h"
 
 // WINDOW MACROS
-# define WINX (int)800
-# define WINY (int)450
-# define WINDX (int)1600
-# define WINDY (int)900
+# define WINX (int)600
+# define WINY (int)300
+# define WINDX (int)1200
+# define WINDY (int)600
 # define ESC 65307 
 # define ISO 0.6153
 

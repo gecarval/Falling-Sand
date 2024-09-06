@@ -686,7 +686,7 @@ void	emulate_steam(int x, int y, t_data *data, char c)
 		data->fsim->map[y][x] = MAT_ID_WATER;
 		return ;
 	}
-	if (time >= 1000000)
+	if (time >= 3000000)
 		data->fsim->map[y][x] = MAT_ID_FOG;
 	else
 		time++;
@@ -842,7 +842,7 @@ void	emulate_woodf(int x, int y, t_data *data)
 {
 	t_pt	pt;
 
-	if (y > 1 && rand() % 50 == 0 && data->fsim->map[y - 1][x] == MAT_ID_EMPTY)
+	if (y > 1 && rand() % 35 == 0 && data->fsim->map[y - 1][x] == MAT_ID_EMPTY)
 		data->fsim->map[y - 1][x] = MAT_ID_FIRE;
 	if (rand() % 750 == 0)
 		data->fsim->map[y][x] = MAT_ID_FIRE;
@@ -1348,7 +1348,7 @@ int	emulate_fly(int x, int y, t_data *data)
 		return (1);
 	pt = find_around_id(x, y, data, MAT_ID_WOOD, 1);
 	if (pt.z == 1)
-		if (rand() % 1000)
+		if (rand() % 700)
 			return (1);
 	if (data->fsim->map[y + 1][x] < data->fsim->map[y][x] && rand() % 30 == 0)
 	{

@@ -169,7 +169,6 @@ int	mlx_anim(t_data *data)
 	if (data->anifsim == 1)
 	{
 		fluidsim_start(data);
-		water_mark(data);
 		mlx_put_image_to_window(data->ini, data->win, data->img->img_ptr, 0, 0);
 		controls_mark(data);
 		i = 0;
