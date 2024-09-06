@@ -6,11 +6,19 @@
 /*   By: gecarval <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 14:24:07 by gecarval          #+#    #+#             */
-/*   Updated: 2024/09/05 21:22:20 by gecarval         ###   ########.fr       */
+/*   Updated: 2024/09/06 10:43:43 by gecarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/renderer.h"
+
+void	process_material(int x, int y, t_data *data, int col)
+{
+	pixel_to_img(x * 2, y * 2, data, col);
+	pixel_to_img(x * 2 + 1, y * 2, data, col);
+	pixel_to_img(x * 2, y * 2 + 1, data, col);
+	pixel_to_img(x * 2 + 1, y * 2 + 1, data, col);
+}
 
 void	render_fluidmap(t_data *data)
 {
@@ -24,50 +32,50 @@ void	render_fluidmap(t_data *data)
 		while (++x < WINX)
 		{
 			if (data->fsim->map[y][x] == 'G')
-				pixel_to_img(x, y, data, 0x555555);
+				process_material(x, y, data, 0x555555);
 			else if (data->fsim->map[y][x] == MAT_ID_WOODF)
-				pixel_to_img(x, y, data, MAT_COL_WOODF);
+				process_material(x, y, data, MAT_COL_WOODF);
 			else if (data->fsim->map[y][x] == MAT_ID_WOOD)
-				pixel_to_img(x, y, data, MAT_COL_WOOD);
+				process_material(x, y, data, MAT_COL_WOOD);
 			else if (data->fsim->map[y][x] == MAT_ID_STONE)
-				pixel_to_img(x, y, data, MAT_COL_STONE);
+				process_material(x, y, data, MAT_COL_STONE);
 			else if (data->fsim->map[y][x] == MAT_ID_SAND)
-				pixel_to_img(x, y, data, MAT_COL_SAND);
+				process_material(x, y, data, MAT_COL_SAND);
 			else if (data->fsim->map[y][x] == MAT_ID_GUNPOWDER)
-				pixel_to_img(x, y, data, MAT_COL_GUNPOWDER);
+				process_material(x, y, data, MAT_COL_GUNPOWDER);
 			else if (data->fsim->map[y][x] == MAT_ID_LAVA)
-				pixel_to_img(x, y, data, MAT_COL_LAVA);
+				process_material(x, y, data, MAT_COL_LAVA);
 			else if (data->fsim->map[y][x] == MAT_ID_WATER)
-				pixel_to_img(x, y, data, MAT_COL_WATER);
+				process_material(x, y, data, MAT_COL_WATER);
 			else if (data->fsim->map[y][x] == MAT_ID_OIL)
-				pixel_to_img(x, y, data, MAT_COL_OIL);
+				process_material(x, y, data, MAT_COL_OIL);
 			else if (data->fsim->map[y][x] == MAT_ID_OILF)
-				pixel_to_img(x, y, data, MAT_COL_OILF);
+				process_material(x, y, data, MAT_COL_OILF);
 			else if (data->fsim->map[y][x] == MAT_ID_ACID)
-				pixel_to_img(x, y, data, MAT_COL_ACID);
+				process_material(x, y, data, MAT_COL_ACID);
 			else if (data->fsim->map[y][x] == MAT_ID_SALT)
-				pixel_to_img(x, y, data, MAT_COL_SALT);
+				process_material(x, y, data, MAT_COL_SALT);
 			else if (data->fsim->map[y][x] == MAT_ID_FIRE)
-				pixel_to_img(x, y, data, MAT_COL_FIRE);
+				process_material(x, y, data, MAT_COL_FIRE);
 			else if (data->fsim->map[y][x] == MAT_ID_EMBER)
-				pixel_to_img(x, y, data, MAT_COL_EMBER);
+				process_material(x, y, data, MAT_COL_EMBER);
 			else if (data->fsim->map[y][x] == MAT_ID_SMOKE)
-				pixel_to_img(x, y, data, MAT_COL_SMOKE);
+				process_material(x, y, data, MAT_COL_SMOKE);
 			else if (data->fsim->map[y][x] == MAT_ID_PROPANE)
-				pixel_to_img(x, y, data, MAT_COL_PROPANE);
+				process_material(x, y, data, MAT_COL_PROPANE);
 			else if (data->fsim->map[y][x] == MAT_ID_STEAM)
-				pixel_to_img(x, y, data, MAT_COL_STEAM);
+				process_material(x, y, data, MAT_COL_STEAM);
 			else if (data->fsim->map[y][x] == MAT_ID_EMPTY)
 			{
-				pixel_to_img(x, y, data, MAT_COL_EMPTY);
-				if (data->fsim->map[y][x + 1] == MAT_ID_FIRE)
-					pixel_to_img(x, y, data, MAT_COL_FIREGLOW);
+				process_material(x, y, data, MAT_COL_EMPTY);
+				/*if (data->fsim->map[y][x + 1] == MAT_ID_FIRE)
+					process_material(x, y, data, MAT_COL_FIREGLOW);
 				if (data->fsim->map[y][x - 1] == MAT_ID_FIRE)
-					pixel_to_img(x, y, data, MAT_COL_FIREGLOW);
+					process_material(x, y, data, MAT_COL_FIREGLOW);
 				if (data->fsim->map[y + 1][x] == MAT_ID_FIRE)
-					pixel_to_img(x, y, data, MAT_COL_FIREGLOW);
+					process_material(x, y, data, MAT_COL_FIREGLOW);
 				if (data->fsim->map[y - 1][x] == MAT_ID_FIRE)
-					pixel_to_img(x, y, data, MAT_COL_FIREGLOW);
+					process_material(x, y, data, MAT_COL_FIREGLOW);*/
 			}
 		}
 	}

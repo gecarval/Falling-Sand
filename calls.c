@@ -6,7 +6,7 @@
 /*   By: gecarval <gecarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 20:32:15 by gecarval          #+#    #+#             */
-/*   Updated: 2024/08/30 14:08:54 by gecarval         ###   ########.fr       */
+/*   Updated: 2024/09/06 10:33:15 by gecarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void	ft_init_program(t_data *data)
 	data->ini = mlx_init();
 	if (!data->ini)
 		display_error(data, "init error\n");
-	data->win = mlx_new_window(data->ini, WINX, WINY, "render");
+	data->win = mlx_new_window(data->ini, WINDX, WINDY, "render");
 	if (!data->win)
 		display_error(data, "window error\n");
 	data->map = (t_map *)malloc(sizeof(t_map));
@@ -82,7 +82,7 @@ void	ft_init_program(t_data *data)
 	data->img = (t_img *)malloc(sizeof(t_img));
 	if (!data->img)
 		display_error(data, "img malloc error\n");
-	data->img->img_ptr = mlx_new_image(data->ini, WINX, WINY);
+	data->img->img_ptr = mlx_new_image(data->ini, WINDX, WINDY);
 	if (!data->img->img_ptr)
 		display_error(data, "img ptr error\n");
 	data->img->img_px = mlx_get_data_addr(data->img->img_ptr, &data->img->bpp,

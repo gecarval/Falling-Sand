@@ -6,7 +6,7 @@
 /*   By: gecarval <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 17:38:51 by gecarval          #+#    #+#             */
-/*   Updated: 2024/09/05 17:23:32 by gecarval         ###   ########.fr       */
+/*   Updated: 2024/09/06 10:34:48 by gecarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ void	pixel_to_img(int x, int y, t_data *data, int color)
 {
 	char	*pixel;
 
-	if ((x < 0 || x >= WINX) || (y < 0 || y >= WINY))
+	if ((x <= 0 || x >= WINDX) || (y <= 0 || y >= WINDY))
 		return ;
 	pixel = data->img->img_px + y * data->img->llen + x * (data->img->bpp / 8);
 	*(int *)pixel = color;
@@ -86,7 +86,7 @@ void	pixel_to_img_float(float_t x, float_t y, t_data *data, int color)
 {
 	char	*pixel;
 
-	if ((x < 0 || x >= WINX) || (y < 0 || y >= WINY))
+	if ((x < 0 || x >= WINDX) || (y < 0 || y >= WINDY))
 		return ;
 	pixel = data->img->img_px + (int)y * data->img->llen + (int)x * (data->img->bpp / 8);
 	*(int *)pixel = color;
@@ -178,7 +178,7 @@ int	mlx_anim(t_data *data)
 	if (data->click_hold == 1)
 	{
 		mlx_mouse_get_pos(data->ini, data->win, &data->mposx, &data->mposy);
-		put_mat(data->mposx, data->mposy, data);
+		put_mat(data->mposx / 2, data->mposy / 2, data);
 	}
 	return (0);
 }

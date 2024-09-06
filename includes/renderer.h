@@ -26,7 +26,9 @@
 
 // WINDOW MACROS
 # define WINX (int)800
-# define WINY (int)600
+# define WINY (int)450
+# define WINDX (int)1600
+# define WINDY (int)900
 # define ESC 65307 
 # define ISO 0.6153
 
