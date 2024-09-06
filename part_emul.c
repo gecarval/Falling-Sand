@@ -6,13 +6,13 @@
 /*   By: gecarval <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:28:33 by gecarval          #+#    #+#             */
-/*   Updated: 2024/09/06 20:25:45 by gecarval         ###   ########.fr       */
+/*   Updated: 2024/09/06 21:19:05 by gecarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/renderer.h"
 
-void	push_inertia(int x, int y, t_data *data, int force)
+void	push_momentum(int x, int y, t_data *data, int force)
 {
 	int	i;
 	int	l;
@@ -177,7 +177,7 @@ int	emulate_propane(int x, int y, t_data *data)
 		{
 			iter[y - 1][x] += iter[y][x] + 1;
 			iter[y][x] = 0;
-			emulate_sand(x, y - 1, data, 2, 2, 0);
+			emulate_fall(x, y - 1, data, 2, 2, 0);
 		}
 		else
 		{
@@ -194,7 +194,7 @@ int	emulate_propane(int x, int y, t_data *data)
 		{
 			iter[y - 1][x - 1] += iter[y][x] + 1;
 			iter[y][x] = 0;
-			emulate_sand(x - 1, y - 1, data, 2, 2, 0);
+			emulate_fall(x - 1, y - 1, data, 2, 2, 0);
 		}
 		else
 		{
@@ -211,7 +211,7 @@ int	emulate_propane(int x, int y, t_data *data)
 		{
 			iter[y - 1][x + 1] += iter[y][x] + 1;
 			iter[y][x] = 0;
-			emulate_sand(x + 1, y - 1, data, 2, 2, 0);
+			emulate_fall(x + 1, y - 1, data, 2, 2, 0);
 		}
 		else
 		{
@@ -276,7 +276,7 @@ int	emulate_fire(int x, int y, t_data *data)
 		{
 			iter[y - 1][x] += iter[y][x] + 1;
 			iter[y][x] = 0;
-			emulate_sand(x, y - 1, data, 2, -3, 0);
+			emulate_fall(x, y - 1, data, 2, -3, 0);
 		}
 		else
 		{
@@ -293,7 +293,7 @@ int	emulate_fire(int x, int y, t_data *data)
 		{
 			iter[y - 1][x - 1] += iter[y][x] + 1;
 			iter[y][x] = 0;
-			emulate_sand(x - 1, y - 1, data, 2, -3, 0);
+			emulate_fall(x - 1, y - 1, data, 2, -3, 0);
 		}
 		else
 		{
@@ -310,7 +310,7 @@ int	emulate_fire(int x, int y, t_data *data)
 		{
 			iter[y - 1][x + 1] += iter[y][x] + 1;
 			iter[y][x] = 0;
-			emulate_sand(x + 1, y - 1, data, 2, -3, 0);
+			emulate_fall(x + 1, y - 1, data, 2, -3, 0);
 		}
 		else
 		{
@@ -401,10 +401,132 @@ int	emulate_gas(int x, int y, t_data *data)
 	return (0);
 }
 
-int	emulate_sand(int x, int y, t_data *data, int randed, int slide, int force)
+int	emulate_solid(int x, int y, t_data *data, int randed, int slide, int force, int inertialweak, int inertialres)
 {
-	char	swap;
-	static int iter[WINY][WINX];
+	char		swap;
+	static int	stable[WINY][WINX];
+	static int	iter[WINY][WINX];
+	static int	equal = 0;
+	int		i;
+	int		direc;
+
+	if (data->fsim->map[y + 1][x] < data->fsim->map[y][x] && rand() % randed == 0)
+	{
+		stable[y][x] = 0;
+		if (rand() % inertialres == 0)
+		{
+			if (stable[y][x] == 0 && data->fsim->map[y][x - 1] != MAT_ID_EMPTY)
+			{
+				if (stable[y][x - 1] == 1)
+					stable[y][x - 1] = 0;
+			}
+			else if(stable[y][x] == 0 && data->fsim->map[y][x + 1] != MAT_ID_EMPTY)
+			{
+				if (stable[y][x + 1] == 1)
+					stable[y][x + 1] = 0;
+			}
+		}
+		if (data->fsim->map[y + 1][x - 1] < data->fsim->map[y + 1][x])
+		{
+			swap = data->fsim->map[y + 1][x - 1];
+			data->fsim->map[y + 1][x - 1] = data->fsim->map[y + 1][x];
+			data->fsim->map[y + 1][x] = swap;
+		}
+		else if (data->fsim->map[y + 1][x + 1] < data->fsim->map[y + 1][x])
+		{
+			swap = data->fsim->map[y + 1][x + 1];
+			data->fsim->map[y + 1][x + 1] = data->fsim->map[y + 1][x];
+			data->fsim->map[y + 1][x] = swap;
+		}
+		swap = data->fsim->map[y + 1][x];
+		data->fsim->map[y + 1][x] = data->fsim->map[y][x];
+		data->fsim->map[y][x] = swap;
+		if (rand() % 2 && iter[y][x] < 3)
+		{
+			iter[y + 1][x] += iter[y][x] + 1;
+			iter[y][x] = 0;
+			emulate_solid(x, y + 1, data, randed, slide, force, inertialweak, inertialres);
+		}
+		else
+		{
+			iter[y][x] = 0;
+			return (1);
+		}
+		return (1);
+	}
+	while (iter[y][x] > 0 && (data->fsim->map[y + 1][x] >= data->fsim->map[y][x]))
+	{
+		if (rand() % 3)
+			push_momentum(x, y + 1, data, force);
+		i = iter[y][x] + slide;
+		iter[y][x] = 0;
+		direc = equal_flud(x, y, data, data->fsim->map[y][x]);
+		if (i <= 0)
+			break ;
+		while (i > 0)
+		{
+			if (x <= 0 && x >= WINX)
+				break ;
+			x += slide_sand(x, y, data, direc);
+			i--;
+		}
+		if (i == 0)
+			return (1);
+	}
+	if (stable[y][x] == 0)
+	{
+		if (data->fsim->map[y + 1][x - 1] < data->fsim->map[y][x] && (equal == 0))
+		{
+			swap = data->fsim->map[y + 1][x - 1];
+			data->fsim->map[y + 1][x - 1] = data->fsim->map[y][x];
+			data->fsim->map[y][x] = swap;
+			equal = 1;
+			if (rand() % 2 && iter[y][x] < 3)
+			{
+				iter[y + 1][x - 1] += iter[y][x] + 1;
+				iter[y][x] = 0;
+				emulate_solid(x - 1, y + 1, data, randed, slide, force, inertialweak, inertialres);
+			}
+			else
+			{
+				iter[y][x] = 0;
+				return (1);
+			}
+			return (1);
+		}
+		else if (data->fsim->map[y + 1][x + 1] < data->fsim->map[y][x] && (equal == 1))
+		{
+			swap = data->fsim->map[y + 1][x + 1];
+			data->fsim->map[y + 1][x + 1] = data->fsim->map[y][x];
+			data->fsim->map[y][x] = swap;
+			equal = 0;
+			if (rand() % 2 && iter[y][x] < 3)
+			{
+				iter[y + 1][x + 1] += iter[y][x] + 1;
+				iter[y][x] = 0;
+				emulate_solid(x + 1, y + 1, data, randed, slide, force, inertialweak, inertialres);
+			}
+			else
+			{
+				iter[y][x] = 0;
+				return (1);
+			}
+			return (1);
+		}
+	}
+	if (equal == 0)
+		equal = 1;
+	else
+		equal = 0;
+	if (rand() % inertialweak == 0)
+		stable[y][x] = 1;
+	return (0);
+}
+
+int	emulate_fall(int x, int y, t_data *data, int randed, int slide, int force)
+{
+	char		swap;
+	static int	iter[WINY][WINX];
 	static int	equal = 0;
 	int		i;
 	int		direc;
@@ -430,7 +552,7 @@ int	emulate_sand(int x, int y, t_data *data, int randed, int slide, int force)
 		{
 			iter[y + 1][x] += iter[y][x] + 1;
 			iter[y][x] = 0;
-			emulate_sand(x, y + 1, data, randed, slide, force);
+			emulate_fall(x, y + 1, data, randed, slide, force);
 		}
 		else
 		{
@@ -442,7 +564,7 @@ int	emulate_sand(int x, int y, t_data *data, int randed, int slide, int force)
 	while (iter[y][x] > 0 && (data->fsim->map[y + 1][x] >= data->fsim->map[y][x]))
 	{
 		if (rand() % 3)
-			push_inertia(x, y + 1, data, force);
+			push_momentum(x, y + 1, data, force);
 		i = iter[y][x] + slide;
 		iter[y][x] = 0;
 		direc = equal_flud(x, y, data, data->fsim->map[y][x]);
@@ -468,7 +590,7 @@ int	emulate_sand(int x, int y, t_data *data, int randed, int slide, int force)
 		{
 			iter[y + 1][x - 1] += iter[y][x] + 1;
 			iter[y][x] = 0;
-			emulate_sand(x - 1, y + 1, data, randed, slide, force);
+			emulate_fall(x - 1, y + 1, data, randed, slide, force);
 		}
 		else
 		{
@@ -487,7 +609,7 @@ int	emulate_sand(int x, int y, t_data *data, int randed, int slide, int force)
 		{
 			iter[y + 1][x + 1] += iter[y][x] + 1;
 			iter[y][x] = 0;
-			emulate_sand(x + 1, y + 1, data, randed, slide, force);
+			emulate_fall(x + 1, y + 1, data, randed, slide, force);
 		}
 		else
 		{
@@ -510,7 +632,7 @@ void	emulate_water(int x, int y, t_data *data, char c)
 
 	if (flud[y][x] == 0)
 	{
-		if (y < (int)WINY - 2 && emulate_sand(x, y, data, 10, -4, 1) == 1)
+		if (y < (int)WINY - 2 && emulate_fall(x, y, data, 10, -4, 1) == 1)
 			return ;
 	}
 	flud[y][x] = 0;
@@ -616,7 +738,7 @@ void	emulate_lava(int x, int y, t_data *data, char c)
 			return ;
 		}
 	}
-	if (y < (int)WINY - 2 && emulate_sand(x, y, data, 1, -2, 2))
+	if (y < (int)WINY - 2 && emulate_fall(x, y, data, 1, -2, 2))
 	{
 		return ;
 	}
@@ -660,7 +782,7 @@ void	emulate_acid(int x, int y, t_data *data, char c)
 			}
 		}
 	}
-	if (y < (int)WINY - 2 && emulate_sand(x, y, data, 10, 1, 1) == 1)
+	if (y < (int)WINY - 2 && emulate_fall(x, y, data, 10, 1, 1) == 1)
 	{
 		return ;
 	}
@@ -758,7 +880,7 @@ void	emulate_oil(int x, int y, t_data *data, char c)
 		data->fsim->map[y][x] = MAT_ID_OILF;
 		return ;
 	}
-	if (y < (int)WINY - 2 && emulate_sand(x, y, data, 4, 3, 2) == 1)
+	if (y < (int)WINY - 2 && emulate_fall(x, y, data, 4, 3, 2) == 1)
 	{
 		return ;
 	}	
@@ -831,7 +953,7 @@ void	emulate_oilf(int x, int y, t_data *data, char c)
 			data->fsim->map[(int)pt.y][(int)pt.x] = MAT_ID_STEAM;
 		}
 	}
-	if (y < (int)WINY - 2 && emulate_sand(x, y, data, 4, 4, 1) == 1)
+	if (y < (int)WINY - 2 && emulate_fall(x, y, data, 4, 4, 1) == 1)
 	{
 		return ;
 	}	
@@ -890,7 +1012,7 @@ void	emulate_soap(int x, int y, t_data *data)
 			return ;
 		}
 	}
-	if (y < (int)WINY - 2 && emulate_sand(x, y, data, 1, 2, 1))
+	if (y < (int)WINY - 2 && emulate_solid(x, y, data, 1, 2, 1, 2, 3))
 	{
 		return ;
 	}
@@ -942,7 +1064,7 @@ int	emulate_soap_bubble(int x, int y, t_data *data)
 		{
 			iter[y - 1][x] += iter[y][x] + 1;
 			iter[y][x] = 0;
-			emulate_sand(x, y - 1, data, 2, 2, 0);
+			emulate_fall(x, y - 1, data, 2, 2, 0);
 		}
 		else
 		{
@@ -959,7 +1081,7 @@ int	emulate_soap_bubble(int x, int y, t_data *data)
 		{
 			iter[y - 1][x - 1] += iter[y][x] + 1;
 			iter[y][x] = 0;
-			emulate_sand(x - 1, y - 1, data, 2, 2, 0);
+			emulate_fall(x - 1, y - 1, data, 2, 2, 0);
 		}
 		else
 		{
@@ -976,7 +1098,7 @@ int	emulate_soap_bubble(int x, int y, t_data *data)
 		{
 			iter[y - 1][x + 1] += iter[y][x] + 1;
 			iter[y][x] = 0;
-			emulate_sand(x + 1, y - 1, data, 2, 2, 0);
+			emulate_fall(x + 1, y - 1, data, 2, 2, 0);
 		}
 		else
 		{
@@ -1030,7 +1152,7 @@ int	emulate_oxygen(int x, int y, t_data *data)
 		{
 			iter[y + 1][x] += iter[y][x] + 1;
 			iter[y][x] = 0;
-			emulate_sand(x, y + 1, data, 2, 2, 0);
+			emulate_fall(x, y + 1, data, 2, 2, 0);
 		}
 		else
 		{
@@ -1059,7 +1181,7 @@ int	emulate_oxygen(int x, int y, t_data *data)
 		{
 			iter[y - 1][x] += iter[y][x] + 1;
 			iter[y][x] = 0;
-			emulate_sand(x, y - 1, data, 2, 2, 0);
+			emulate_fall(x, y - 1, data, 2, 2, 0);
 		}
 		else
 		{
@@ -1076,7 +1198,7 @@ int	emulate_oxygen(int x, int y, t_data *data)
 		{
 			iter[y - 1][x - 1] += iter[y][x] + 1;
 			iter[y][x] = 0;
-			emulate_sand(x - 1, y - 1, data, 2, 2, 0);
+			emulate_fall(x - 1, y - 1, data, 2, 2, 0);
 		}
 		else
 		{
@@ -1093,7 +1215,7 @@ int	emulate_oxygen(int x, int y, t_data *data)
 		{
 			iter[y - 1][x + 1] += iter[y][x] + 1;
 			iter[y][x] = 0;
-			emulate_sand(x + 1, y - 1, data, 2, 2, 0);
+			emulate_fall(x + 1, y - 1, data, 2, 2, 0);
 		}
 		else
 		{
@@ -1136,7 +1258,7 @@ int	emulate_hidrogen(int x, int y, t_data *data)
 		{
 			iter[y + 1][x] += iter[y][x] + 1;
 			iter[y][x] = 0;
-			emulate_sand(x, y + 1, data, 2, 2, 0);
+			emulate_fall(x, y + 1, data, 2, 2, 0);
 		}
 		else
 		{
@@ -1165,7 +1287,7 @@ int	emulate_hidrogen(int x, int y, t_data *data)
 		{
 			iter[y - 1][x] += iter[y][x] + 1;
 			iter[y][x] = 0;
-			emulate_sand(x, y - 1, data, 2, 2, 0);
+			emulate_fall(x, y - 1, data, 2, 2, 0);
 		}
 		else
 		{
@@ -1182,7 +1304,7 @@ int	emulate_hidrogen(int x, int y, t_data *data)
 		{
 			iter[y - 1][x - 1] += iter[y][x] + 1;
 			iter[y][x] = 0;
-			emulate_sand(x - 1, y - 1, data, 2, 2, 0);
+			emulate_fall(x - 1, y - 1, data, 2, 2, 0);
 		}
 		else
 		{
@@ -1199,7 +1321,7 @@ int	emulate_hidrogen(int x, int y, t_data *data)
 		{
 			iter[y - 1][x + 1] += iter[y][x] + 1;
 			iter[y][x] = 0;
-			emulate_sand(x + 1, y - 1, data, 2, 2, 0);
+			emulate_fall(x + 1, y - 1, data, 2, 2, 0);
 		}
 		else
 		{
@@ -1237,7 +1359,7 @@ int	emulate_fly(int x, int y, t_data *data)
 		{
 			iter[y + 1][x] += iter[y][x] + 1;
 			iter[y][x] = 0;
-			emulate_sand(x, y + 1, data, 2, 2, 0);
+			emulate_fall(x, y + 1, data, 2, 2, 0);
 		}
 		else
 		{
@@ -1266,7 +1388,7 @@ int	emulate_fly(int x, int y, t_data *data)
 		{
 			iter[y - 1][x] += iter[y][x] + 1;
 			iter[y][x] = 0;
-			emulate_sand(x, y - 1, data, 2, 2, 0);
+			emulate_fall(x, y - 1, data, 2, 2, 0);
 		}
 		else
 		{
@@ -1283,7 +1405,7 @@ int	emulate_fly(int x, int y, t_data *data)
 		{
 			iter[y - 1][x - 1] += iter[y][x] + 1;
 			iter[y][x] = 0;
-			emulate_sand(x - 1, y - 1, data, 2, 2, 0);
+			emulate_fall(x - 1, y - 1, data, 2, 2, 0);
 		}
 		else
 		{
@@ -1300,7 +1422,7 @@ int	emulate_fly(int x, int y, t_data *data)
 		{
 			iter[y - 1][x + 1] += iter[y][x] + 1;
 			iter[y][x] = 0;
-			emulate_sand(x + 1, y - 1, data, 2, 2, 0);
+			emulate_fall(x + 1, y - 1, data, 2, 2, 0);
 		}
 		else
 		{
@@ -1439,7 +1561,7 @@ int	emulate_fog(int x, int y, t_data *data)
 		{
 			iter[y + 1][x] += iter[y][x] + 1;
 			iter[y][x] = 0;
-			emulate_sand(x, y + 1, data, 2, 2, 0);
+			emulate_fall(x, y + 1, data, 2, 2, 0);
 		}
 		else
 		{
@@ -1468,7 +1590,7 @@ int	emulate_fog(int x, int y, t_data *data)
 		{
 			iter[y - 1][x] += iter[y][x] + 1;
 			iter[y][x] = 0;
-			emulate_sand(x, y - 1, data, 2, 2, 0);
+			emulate_fall(x, y - 1, data, 2, 2, 0);
 		}
 		else
 		{
@@ -1485,7 +1607,7 @@ int	emulate_fog(int x, int y, t_data *data)
 		{
 			iter[y - 1][x - 1] += iter[y][x] + 1;
 			iter[y][x] = 0;
-			emulate_sand(x - 1, y - 1, data, 2, 2, 0);
+			emulate_fall(x - 1, y - 1, data, 2, 2, 0);
 		}
 		else
 		{
@@ -1502,7 +1624,7 @@ int	emulate_fog(int x, int y, t_data *data)
 		{
 			iter[y - 1][x + 1] += iter[y][x] + 1;
 			iter[y][x] = 0;
-			emulate_sand(x + 1, y - 1, data, 2, 2, 0);
+			emulate_fall(x + 1, y - 1, data, 2, 2, 0);
 		}
 		else
 		{

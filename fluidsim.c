@@ -6,7 +6,7 @@
 /*   By: gecarval <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 14:24:07 by gecarval          #+#    #+#             */
-/*   Updated: 2024/09/06 20:04:04 by gecarval         ###   ########.fr       */
+/*   Updated: 2024/09/06 21:12:32 by gecarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -246,9 +246,9 @@ void	process_gravity(t_data *data)
 			else if (data->fsim->map[y][x] == MAT_ID_SOAP)		//SOAP
 				emulate_soap(x, y, data);
 			else if (data->fsim->map[y][x] == MAT_ID_SAND)		//SAND
-				emulate_sand(x, y, data, 2, 3, 3);
+				emulate_solid(x, y, data, 2, 3, 3, 10, 10);
 			else if (data->fsim->map[y][x] == MAT_ID_STONE)		//STONE
-				emulate_sand(x, y, data, 1, -1, 8);
+				emulate_solid(x, y, data, 1, -1, 8, 1, 1);
 			else if (data->fsim->map[y][x] == MAT_ID_WOOD)		//WOOD
 				emulate_wood(x, y, data);
 			else if (data->fsim->map[y][x] == MAT_ID_WOODF)		//WOOD ON FIRE
