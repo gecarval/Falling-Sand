@@ -29,6 +29,8 @@ void	push_momentum(int x, int y, t_data *data, int force)
 		if (i < WINX)
 			if (data->fsim->map[y][i] == data->fsim->map[y - 1][x])
 				r++;
+		if (data->fsim->map[y][i] == MAT_ID_WOOD)
+			break ;
 		if (data->fsim->map[y][i] > data->fsim->map[y - 1][x])
 			if (rand() % force == 0)
 				break ;
@@ -49,6 +51,8 @@ void	push_momentum(int x, int y, t_data *data, int force)
 		if (i > 0)
 			if (data->fsim->map[y][i] == data->fsim->map[y - 1][x])
 				l++;
+		if (data->fsim->map[y][i] == MAT_ID_WOOD)
+			break ;
 		if (data->fsim->map[y][i] > data->fsim->map[y - 1][x])
 			if (rand() % force == 0)
 				break ;
