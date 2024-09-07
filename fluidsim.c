@@ -210,11 +210,11 @@ void	process_gravity(t_data *data)
 	int	y;
 	int	x;
 
-	y = (int)WINY;
-	while (--y >= 0)
+	y = WINY;
+	while (--y > 0)
 	{
-		x = -1;
-		while (++x < (int)WINX)
+		x = 0;
+		while (++x < WINX)
 		{
 			if (data->fsim->map[y][x] == MAT_ID_FIRE)		//FIRE
 				emulate_fire(x, y, data);
