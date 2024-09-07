@@ -129,17 +129,14 @@ void	put_mat(int x, int y, t_data *data)
 		j = x - data->brush_size;
 		while(j <= x + data->brush_size)
 		{
-			if (i > 0 && i < WINY)
+			if ((i > 0 && i < WINY) && (j > 0 && j < WINX))
 			{
-				if (j > 0 && j < WINX)
+				if(data->fsim->map[i][j] != 'z')
 				{
-					if(data->fsim->map[i][j] != 'G')
-					{
-						if (data->click_fill == MAT_ID_EMPTY)
-							data->fsim->map[i][j] = data->click_fill;
-						else if (data->fsim->map[i][j] == MAT_ID_EMPTY)
-							data->fsim->map[i][j] = data->click_fill;
-					}
+					if (data->click_fill == MAT_ID_EMPTY)
+						data->fsim->map[i][j] = data->click_fill;
+					else if (data->fsim->map[i][j] == MAT_ID_EMPTY)
+						data->fsim->map[i][j] = data->click_fill;
 				}
 			}
 			j++;
