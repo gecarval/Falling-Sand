@@ -57,6 +57,10 @@ void	render_fluidmap(t_data *data)
 		{
 			if (data->fsim->map[y][x] == 'z')
 				process_material(x, y, data, 0x555555);
+			else if (data->fsim->map[y][x] == MAT_ID_GLASSF)
+				process_material(x, y, data, MAT_COL_GLASSF);
+			else if (data->fsim->map[y][x] == MAT_ID_GLASS)
+				process_material(x, y, data, MAT_COL_GLASS);
 			else if (data->fsim->map[y][x] == MAT_ID_WOODF)
 				process_material(x, y, data, MAT_COL_WOODF);
 			else if (data->fsim->map[y][x] == MAT_ID_WOOD)
@@ -109,6 +113,7 @@ void	render_fluidmap(t_data *data)
 				post_processing(x, y, data, MAT_ID_HIDROGEN, MAT_COL_HIDROGENG);
 				post_processing(x, y, data, MAT_ID_OXYGEN, MAT_COL_OXYGENG);
 				post_processing(x, y, data, MAT_ID_FOG, MAT_COL_FOGG);
+				post_processing(x, y, data, MAT_ID_GLASS, MAT_COL_GLASSF);
 			}
 		}
 	}
@@ -216,44 +221,48 @@ void	process_gravity(t_data *data)
 		x = 0;
 		while (++x < WINX)
 		{
-			if (data->fsim->map[y][x] == MAT_ID_FIRE)		//FIRE
-				emulate_fire(x, y, data);
-			else if (data->fsim->map[y][x] == MAT_ID_PROPANE)		//PROPANE
-				emulate_propane(x, y, data);
+			if (data->fsim->map[y][x] == MAT_ID_HIDROGEN)		//HIDROGEN
+				emulate_hidrogen(x, y, data);
+			else if (data->fsim->map[y][x] == MAT_ID_OXYGEN)	//OXYGEN
+				emulate_oxygen(x, y, data);
+			else if (data->fsim->map[y][x] == MAT_ID_BUBBLE)	//BUBBLE
+				emulate_soap_bubble(x, y, data);
 			else if (data->fsim->map[y][x] == MAT_ID_STEAM)		//STEAM
 				emulate_steam(x, y, data, MAT_ID_STEAM);
-			else if (data->fsim->map[y][x] == MAT_ID_OXYGEN)		//OXYGEN
-				emulate_oxygen(x, y, data);
-			else if (data->fsim->map[y][x] == MAT_ID_HIDROGEN)		//HIDROGEN
-				emulate_hidrogen(x, y, data);
+			else if (data->fsim->map[y][x] == MAT_ID_PROPANE)	//PROPANE
+				emulate_propane(x, y, data);
+			else if (data->fsim->map[y][x] == MAT_ID_FIRE)		//FIRE
+				emulate_fire(x, y, data);
 			else if (data->fsim->map[y][x] == MAT_ID_SMOKE)		//SMOKE
 				emulate_smoke(x, y, data);
 			else if (data->fsim->map[y][x] == MAT_ID_FOG)		//FOG
 				emulate_fog(x, y, data);
-			else if (data->fsim->map[y][x] == MAT_ID_WATER)		//WATER
-				emulate_water(x, y, data, MAT_ID_WATER);
+			else if (data->fsim->map[y][x] == MAT_ID_FLY)		//FLY
+				emulate_fly(x, y, data);
+			else if (data->fsim->map[y][x] == MAT_ID_ACID)		//ACID
+				emulate_acid(x, y, data, MAT_ID_ACID);
 			else if (data->fsim->map[y][x] == MAT_ID_OIL)		//OIL
 				emulate_oil(x, y, data, MAT_ID_OIL);
 			else if (data->fsim->map[y][x] == MAT_ID_OILF)		//OIL ON FIRE
 				emulate_oilf(x, y, data, MAT_ID_OILF);
+			else if (data->fsim->map[y][x] == MAT_ID_WATER)		//WATER
+				emulate_water(x, y, data, MAT_ID_WATER);
 			else if (data->fsim->map[y][x] == MAT_ID_LAVA)		//LAVA
 				emulate_lava(x, y, data, MAT_ID_LAVA);
-			else if (data->fsim->map[y][x] == MAT_ID_ACID)		//ACID
-				emulate_acid(x, y, data, MAT_ID_ACID);
 			else if (data->fsim->map[y][x] == MAT_ID_SOAP)		//SOAP
 				emulate_soap(x, y, data);
 			else if (data->fsim->map[y][x] == MAT_ID_SAND)		//SAND
-				emulate_solid(x, y, data, 2, 3, 3, 1, 10);
+				emulate_solid(x, y, data, 2, 3, 4, 1, 10);
 			else if (data->fsim->map[y][x] == MAT_ID_STONE)		//STONE
 				emulate_solid(x, y, data, 1, -1, 8, 10, 1);
 			else if (data->fsim->map[y][x] == MAT_ID_WOOD)		//WOOD
 				emulate_wood(x, y, data);
 			else if (data->fsim->map[y][x] == MAT_ID_WOODF)		//WOOD ON FIRE
 				emulate_woodf(x, y, data);
-			else if (data->fsim->map[y][x] == MAT_ID_BUBBLE)		//BUBBLE
-				emulate_soap_bubble(x, y, data);
-			else if (data->fsim->map[y][x] == MAT_ID_FLY)		//FLY
-				emulate_fly(x, y, data);
+			else if (data->fsim->map[y][x] == MAT_ID_GLASS)		//GLASS
+				;
+			else if (data->fsim->map[y][x] == MAT_ID_GLASSF)	//GLASS ON FIRE
+				emulate_glassf(x, y, data);
 		}
 	}
 }

@@ -25,12 +25,12 @@
 # include "../libft/libft.h"
 
 // WINDOW MACROS
-# define WINX (int)600
-# define WINY (int)300
-# define WINDX (int)1200
-# define WINDY (int)600
-# define ESC 65307 
-# define ISO 0.6153
+# define WINX	(int)400
+# define WINY	(int)300
+# define WINDX	(int)800
+# define WINDY	(int)600
+# define ESC	65307 
+# define ISO	0.6153
 
 // PARTICLES
 #define MAT_ID_EMPTY		(char)48
@@ -56,13 +56,17 @@
 #define MAT_ID_STONE		(char)68
 #define MAT_ID_WOOD		(char)69
 #define MAT_ID_WOODF		(char)70
-#define MAT_ID_WIND		(char)71
+#define MAT_ID_GLASS		(char)71
+#define MAT_ID_GLASSF		(char)72
+#define MAT_ID_WIND		(char)73
 
 // COLOR
 #define MAT_COL_EMPTY      0x000000
 #define MAT_COL_SAND       0xC2B280
 #define MAT_COL_SALT       0xC8B4BE
 #define MAT_COL_BUBBLE     0xCCCCCC
+#define MAT_COL_GLASS      0x111122
+#define MAT_COL_GLASSF     0xEEEEFF
 #define MAT_COL_HIDROGEN   0xAAAAAA
 #define MAT_COL_FOG        0x777777
 #define MAT_COL_FLY        0x999999
@@ -251,6 +255,7 @@ void	emulate_woodf(int x, int y, t_data *data);
 void	emulate_oil(int x, int y, t_data *data, char c);
 void	emulate_oilf(int x, int y, t_data *data, char c);
 void	emulate_soap(int x, int y, t_data *data);
+void	emulate_glassf(int x, int y, t_data *data);
 int		emulate_gas(int x, int y, t_data *data);
 int		emulate_fire(int x, int y, t_data *data);
 int		emulate_fall(int x, int y, t_data *data, int randed, int slide, int force);
