@@ -65,7 +65,7 @@
 #define MAT_COL_SAND       0xC2B280
 #define MAT_COL_SALT       0xC8B4BE
 #define MAT_COL_BUBBLE     0xCCCCCC
-#define MAT_COL_GLASS      0x111122
+#define MAT_COL_GLASS      0x222233
 #define MAT_COL_GLASSF     0xEEEEFF
 #define MAT_COL_HIDROGEN   0xAAAAAA
 #define MAT_COL_FOG        0x777777

@@ -61,6 +61,8 @@ void	render_fluidmap(t_data *data)
 			{
 				process_material(x, y, data, MAT_COL_EMPTY);
 				post_processing(x, y, data, MAT_ID_FIRE, MAT_COL_FIREG);
+				post_processing(x, y, data, MAT_ID_LAVA, MAT_COL_FIREG);
+				post_processing(x, y, data, MAT_ID_WATER, MAT_COL_WATER);
 				post_processing(x, y, data, MAT_ID_BUBBLE, MAT_COL_BUBBLE);
 				post_processing(x, y, data, MAT_ID_HIDROGEN, MAT_COL_HIDROGENG);
 				post_processing(x, y, data, MAT_ID_OXYGEN, MAT_COL_OXYGENG);
@@ -70,7 +72,12 @@ void	render_fluidmap(t_data *data)
 			else if (data->fsim->map[y][x] == MAT_ID_GLASSF)
 				process_material(x, y, data, MAT_COL_GLASSF);
 			else if (data->fsim->map[y][x] == MAT_ID_GLASS)
-				process_material(x, y, data, MAT_COL_GLASS);
+			{
+				if ((y + x) % 4)
+					process_material(x, y, data, MAT_COL_GLASS);
+				else
+					process_material(x, y, data, MAT_COL_GLASS + 0x222233);
+			}
 			else if (data->fsim->map[y][x] == MAT_ID_WOODF)
 				process_material(x, y, data, MAT_COL_WOODF);
 			else if (data->fsim->map[y][x] == MAT_ID_WOOD)
@@ -78,7 +85,12 @@ void	render_fluidmap(t_data *data)
 			else if (data->fsim->map[y][x] == MAT_ID_STONE)
 				process_material(x, y, data, MAT_COL_STONE);
 			else if (data->fsim->map[y][x] == MAT_ID_SAND)
-				process_material(x, y, data, MAT_COL_SAND);
+			{
+				if (((y % 3) + x % 3) > 0)
+					process_material(x, y, data, MAT_COL_SAND);
+				else
+					process_material(x, y, data, MAT_COL_SAND - 0x111111);
+			}
 			else if (data->fsim->map[y][x] == MAT_ID_SOAP)
 				process_material(x, y, data, MAT_COL_SOAP);
 			else if (data->fsim->map[y][x] == MAT_ID_GUNPOWDER)
