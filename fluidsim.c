@@ -57,6 +57,16 @@ void	render_fluidmap(t_data *data)
 		{
 			if (data->fsim->map[y][x] == 'z')
 				process_material(x, y, data, 0x555555);
+			else if (data->fsim->map[y][x] == MAT_ID_EMPTY)
+			{
+				process_material(x, y, data, MAT_COL_EMPTY);
+				post_processing(x, y, data, MAT_ID_FIRE, MAT_COL_FIREG);
+				post_processing(x, y, data, MAT_ID_BUBBLE, MAT_COL_BUBBLE);
+				post_processing(x, y, data, MAT_ID_HIDROGEN, MAT_COL_HIDROGENG);
+				post_processing(x, y, data, MAT_ID_OXYGEN, MAT_COL_OXYGENG);
+				post_processing(x, y, data, MAT_ID_FOG, MAT_COL_FOGG);
+				post_processing(x, y, data, MAT_ID_GLASS, MAT_COL_GLASSF);
+			}
 			else if (data->fsim->map[y][x] == MAT_ID_GLASSF)
 				process_material(x, y, data, MAT_COL_GLASSF);
 			else if (data->fsim->map[y][x] == MAT_ID_GLASS)
@@ -105,16 +115,6 @@ void	render_fluidmap(t_data *data)
 				process_material(x, y, data, MAT_COL_OXYGEN);
 			else if (data->fsim->map[y][x] == MAT_ID_HIDROGEN)
 				process_material(x, y, data, MAT_COL_HIDROGEN);
-			else if (data->fsim->map[y][x] == MAT_ID_EMPTY)
-			{
-				process_material(x, y, data, MAT_COL_EMPTY);
-				post_processing(x, y, data, MAT_ID_FIRE, MAT_COL_FIREG);
-				post_processing(x, y, data, MAT_ID_BUBBLE, MAT_COL_BUBBLE);
-				post_processing(x, y, data, MAT_ID_HIDROGEN, MAT_COL_HIDROGENG);
-				post_processing(x, y, data, MAT_ID_OXYGEN, MAT_COL_OXYGENG);
-				post_processing(x, y, data, MAT_ID_FOG, MAT_COL_FOGG);
-				post_processing(x, y, data, MAT_ID_GLASS, MAT_COL_GLASSF);
-			}
 		}
 	}
 }
@@ -221,7 +221,9 @@ void	process_gravity(t_data *data)
 		x = 0;
 		while (++x < WINX)
 		{
-			if (data->fsim->map[y][x] == MAT_ID_HIDROGEN)		//HIDROGEN
+			if (data->fsim->map[y][x] == MAT_ID_EMPTY)		//EMPTY
+				;
+			else if (data->fsim->map[y][x] == MAT_ID_HIDROGEN)	//HIDROGEN
 				emulate_hidrogen(x, y, data);
 			else if (data->fsim->map[y][x] == MAT_ID_OXYGEN)	//OXYGEN
 				emulate_oxygen(x, y, data);

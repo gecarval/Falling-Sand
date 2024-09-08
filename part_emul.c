@@ -241,10 +241,7 @@ int	emulate_solid(int x, int y, t_data *data, int randed, int slide, int force, 
 				emulate_solid(x - 1, y + 1, data, randed, slide, force, inertialchance, inertialres);
 			}
 			else
-			{
 				iter[y][x] = 0;
-				return (1);
-			}
 			return (1);
 		}
 		else if (data->fsim->map[y + 1][x + 1] < data->fsim->map[y][x] && (equal == 1))
@@ -262,10 +259,7 @@ int	emulate_solid(int x, int y, t_data *data, int randed, int slide, int force, 
 				emulate_solid(x + 1, y + 1, data, randed, slide, force, inertialchance, inertialres);
 			}
 			else
-			{
 				iter[y][x] = 0;
-				return (1);
-			}
 			return (1);
 		}
 	}
@@ -330,10 +324,7 @@ int	emulate_fall(int x, int y, t_data *data, int randed, int slide, int force)
 				emulate_fall(x - 1, y + 1, data, randed, slide, force);
 			}
 			else
-			{
 				iter[y][x] = 0;
-				return (1);
-			}
 			return (1);
 		}
 		else if (equal == 1 && data->fsim->map[y + 1][x + 1] < data->fsim->map[y][x])
@@ -351,10 +342,7 @@ int	emulate_fall(int x, int y, t_data *data, int randed, int slide, int force)
 				emulate_fall(x + 1, y + 1, data, randed, slide, force);
 			}
 			else
-			{
 				iter[y][x] = 0;
-				return (1);
-			}
 			return (1);
 		}
 	}
@@ -384,10 +372,7 @@ int	emulate_fall(int x, int y, t_data *data, int randed, int slide, int force)
 			emulate_fall(x, y + 1, data, randed, slide, force);
 		}
 		else
-		{
 			iter[y][x] = 0;
-			return (1);
-		}
 		return (1);
 	}
 	if (equal == 0)
@@ -429,10 +414,7 @@ void	emulate_water(int x, int y, t_data *data, char c)
 				emulate_water(x - 1, y, data, c);
 			}
 			else
-			{
 				iter[y][x] = 0;
-				return ;
-			}
 			return ;
 		}
 		if (rand() % 2 && data->fsim->map[y][x + 1] < c)
@@ -450,10 +432,7 @@ void	emulate_water(int x, int y, t_data *data, char c)
 				emulate_water(x + 1, y, data, c);
 			}
 			else
-			{
 				iter[y][x] = 0;
-				return ;
-			}
 			return ;
 		}
 	}
@@ -500,10 +479,8 @@ int	emulate_gas(int x, int y, t_data *data)
 			emulate_gas(x, y - 1, data);
 		}
 		else
-		{
 			iter[y][x] = 0;
-			return (1);
-		}
+		return (1);
 	}	
 	if ((rand() % 2 && equal == 1) && data->fsim->map[y - 1][x - 1] < data->fsim->map[y][x])
 	{
@@ -521,10 +498,8 @@ int	emulate_gas(int x, int y, t_data *data)
 			emulate_gas(x - 1, y - 1, data);
 		}
 		else
-		{
 			iter[y][x] = 0;
-			return (1);
-		}
+		return (1);
 	}	
 	if ((rand() % 2 && equal == 0) && data->fsim->map[y - 1][x + 1] < data->fsim->map[y][x])
 	{
@@ -542,10 +517,8 @@ int	emulate_gas(int x, int y, t_data *data)
 			emulate_gas(x + 1, y - 1, data);
 		}
 		else
-		{
 			iter[y][x] = 0;
-			return (1);
-		}
+		return (1);
 	}	
 	if (equal == 0)
 		equal = 1;
@@ -648,10 +621,8 @@ int	emulate_fog(int x, int y, t_data *data)
 			emulate_fall(x, y + 1, data, 2, 2, 0);
 		}
 		else
-		{
 			iter[y][x] = 0;
-			return (1);
-		}
+		return (1);
 	}
 	if (rand() % 2 && data->fsim->map[y - 1][x] < data->fsim->map[y][x])
 	{
@@ -680,10 +651,8 @@ int	emulate_fog(int x, int y, t_data *data)
 			emulate_fall(x, y - 1, data, 2, 2, 0);
 		}
 		else
-		{
 			iter[y][x] = 0;
-			return (1);
-		}
+		return (1);
 	}	
 	if (rand() % 2 && data->fsim->map[y - 1][x - 1] < data->fsim->map[y][x])
 	{
@@ -700,10 +669,8 @@ int	emulate_fog(int x, int y, t_data *data)
 			emulate_fall(x - 1, y - 1, data, 2, 2, 0);
 		}
 		else
-		{
 			iter[y][x] = 0;
-			return (1);
-		}
+		return (1);
 	}	
 	if (rand() % 2 && data->fsim->map[y - 1][x + 1] < data->fsim->map[y][x])
 	{
@@ -720,10 +687,8 @@ int	emulate_fog(int x, int y, t_data *data)
 			emulate_fall(x + 1, y - 1, data, 2, 2, 0);
 		}
 		else
-		{
 			iter[y][x] = 0;
-			return (1);
-		}
+		return (1);
 	}
 	return (0);
 }
@@ -805,10 +770,8 @@ int	emulate_fire(int x, int y, t_data *data)
 			emulate_fall(x, y - 1, data, 2, -3, 0);
 		}
 		else
-		{
 			iter[y][x] = 0;
-			return (1);
-		}
+		return (1);
 	}	
 	if (rand() % 2 && data->fsim->map[y - 1][x - 1] < data->fsim->map[y][x])
 	{
@@ -825,10 +788,8 @@ int	emulate_fire(int x, int y, t_data *data)
 			emulate_fall(x - 1, y - 1, data, 2, -3, 0);
 		}
 		else
-		{
 			iter[y][x] = 0;
-			return (1);
-		}
+		return (1);
 	}	
 	if (rand() % 2 && data->fsim->map[y - 1][x + 1] < data->fsim->map[y][x])
 	{
@@ -845,10 +806,8 @@ int	emulate_fire(int x, int y, t_data *data)
 			emulate_fall(x + 1, y - 1, data, 2, -3, 0);
 		}
 		else
-		{
 			iter[y][x] = 0;
-			return (1);
-		}
+		return (1);
 	}
 	return (0);
 }
@@ -893,10 +852,8 @@ int	emulate_smoke(int x, int y, t_data *data)
 			emulate_gas(x, y - 1, data);
 		}
 		else
-		{
 			iter[y][x] = 0;
-			return (1);
-		}
+		return (1);
 	}
 	if (rand() % 2 && data->fsim->map[y + 1][x] < data->fsim->map[y][x])
 	{
@@ -924,10 +881,8 @@ int	emulate_smoke(int x, int y, t_data *data)
 			emulate_gas(x, y + 1, data);
 		}
 		else
-		{
 			iter[y][x] = 0;
-			return (1);
-		}
+		return (1);
 	}	
 	if (rand() % 2 && data->fsim->map[y + 1][x - 1] < data->fsim->map[y][x])
 	{
@@ -943,10 +898,8 @@ int	emulate_smoke(int x, int y, t_data *data)
 			emulate_gas(x - 1, y + 1, data);
 		}
 		else
-		{
 			iter[y][x] = 0;
-			return (1);
-		}
+		return (1);
 	}	
 	if (rand() % 2 && data->fsim->map[y + 1][x + 1] < data->fsim->map[y][x])
 	{
@@ -962,10 +915,8 @@ int	emulate_smoke(int x, int y, t_data *data)
 			emulate_gas(x + 1, y + 1, data);
 		}
 		else
-		{
 			iter[y][x] = 0;
-			return (1);
-		}
+		return (1);
 	}
 	return (0);
 }
@@ -1024,10 +975,8 @@ int	emulate_propane(int x, int y, t_data *data)
 			emulate_fall(x, y - 1, data, 2, 2, 0);
 		}
 		else
-		{
 			iter[y][x] = 0;
-			return (1);
-		}
+		return (1);
 	}	
 	if (rand() % 2 && data->fsim->map[y - 1][x - 1] < data->fsim->map[y][x])
 	{
@@ -1044,10 +993,8 @@ int	emulate_propane(int x, int y, t_data *data)
 			emulate_fall(x - 1, y - 1, data, 2, 2, 0);
 		}
 		else
-		{
 			iter[y][x] = 0;
-			return (1);
-		}
+		return (1);
 	}	
 	if (rand() % 2 && data->fsim->map[y - 1][x + 1] < data->fsim->map[y][x])
 	{
@@ -1064,10 +1011,8 @@ int	emulate_propane(int x, int y, t_data *data)
 			emulate_fall(x + 1, y - 1, data, 2, 2, 0);
 		}
 		else
-		{
 			iter[y][x] = 0;
-			return (1);
-		}
+		return (1);
 	}
 	return (0);
 }
@@ -1190,10 +1135,8 @@ void	emulate_acid(int x, int y, t_data *data, char c)
 				emulate_acid(x - 1, y, data, c);
 			}
 			else
-			{
 				iter[y][x] = 0;
-				return ;
-			}
+			return ;
 		}
 		if (rand() % 2 && data->fsim->map[y][x + 1] < c)
 		{
@@ -1209,10 +1152,8 @@ void	emulate_acid(int x, int y, t_data *data, char c)
 				emulate_acid(x + 1, y, data, c);
 			}
 			else
-			{
 				iter[y][x] = 0;
-				return ;
-			}
+			return ;
 		}
 	}
 }
@@ -1259,10 +1200,7 @@ void	emulate_oil(int x, int y, t_data *data, char c)
 				emulate_water(x - 1, y, data, c);
 			}
 			else
-			{
 				iter[y][x] = 0;
-				return ;
-			}
 			return ;
 		}
 		else if (data->fsim->map[y][x + 1] < c)
@@ -1279,10 +1217,7 @@ void	emulate_oil(int x, int y, t_data *data, char c)
 				emulate_water(x + 1, y, data, c);
 			}
 			else
-			{
 				iter[y][x] = 0;
-				return ;
-			}
 			return ;
 		}
 	}
@@ -1356,10 +1291,7 @@ void	emulate_oilf(int x, int y, t_data *data, char c)
 				emulate_water(x - 1, y, data, c);
 			}
 			else
-			{
 				iter[y][x] = 0;
-				return ;
-			}
 			return ;
 		}
 		if (rand() % 2 && data->fsim->map[y][x + 1] < c)
@@ -1376,10 +1308,7 @@ void	emulate_oilf(int x, int y, t_data *data, char c)
 				emulate_water(x + 1, y, data, c);
 			}
 			else
-			{
 				iter[y][x] = 0;
-				return ;
-			}
 			return ;
 		}
 	}
@@ -1466,10 +1395,8 @@ int	emulate_soap_bubble(int x, int y, t_data *data)
 			emulate_fall(x, y - 1, data, 2, 2, 0);
 		}
 		else
-		{
 			iter[y][x] = 0;
-			return (1);
-		}
+		return (1);
 	}	
 	if (rand() % 2 && data->fsim->map[y - 1][x - 1] < data->fsim->map[y][x])
 	{
@@ -1486,10 +1413,8 @@ int	emulate_soap_bubble(int x, int y, t_data *data)
 			emulate_fall(x - 1, y - 1, data, 2, 2, 0);
 		}
 		else
-		{
 			iter[y][x] = 0;
-			return (1);
-		}
+		return (1);
 	}	
 	if (rand() % 2 && data->fsim->map[y - 1][x + 1] < data->fsim->map[y][x])
 	{
@@ -1506,10 +1431,8 @@ int	emulate_soap_bubble(int x, int y, t_data *data)
 			emulate_fall(x + 1, y - 1, data, 2, 2, 0);
 		}
 		else
-		{
 			iter[y][x] = 0;
-			return (1);
-		}
+		return (1);
 	}
 	return (0);
 }
@@ -1569,10 +1492,8 @@ int	emulate_oxygen(int x, int y, t_data *data)
 			emulate_fall(x, y + 1, data, 2, 2, 0);
 		}
 		else
-		{
 			iter[y][x] = 0;
-			return (1);
-		}
+		return (1);
 	}
 	if (rand() % 2 && data->fsim->map[y - 1][x] < data->fsim->map[y][x])
 	{
@@ -1601,10 +1522,8 @@ int	emulate_oxygen(int x, int y, t_data *data)
 			emulate_fall(x, y - 1, data, 2, 2, 0);
 		}
 		else
-		{
 			iter[y][x] = 0;
-			return (1);
-		}
+		return (1);
 	}	
 	if (rand() % 2 && data->fsim->map[y - 1][x - 1] < data->fsim->map[y][x])
 	{
@@ -1621,10 +1540,8 @@ int	emulate_oxygen(int x, int y, t_data *data)
 			emulate_fall(x - 1, y - 1, data, 2, 2, 0);
 		}
 		else
-		{
 			iter[y][x] = 0;
-			return (1);
-		}
+		return (1);
 	}	
 	if (rand() % 2 && data->fsim->map[y - 1][x + 1] < data->fsim->map[y][x])
 	{
@@ -1641,10 +1558,8 @@ int	emulate_oxygen(int x, int y, t_data *data)
 			emulate_fall(x + 1, y - 1, data, 2, 2, 0);
 		}
 		else
-		{
 			iter[y][x] = 0;
-			return (1);
-		}
+		return (1);
 	}
 	return (0);
 }
@@ -1692,10 +1607,8 @@ int	emulate_hidrogen(int x, int y, t_data *data)
 			emulate_fall(x, y + 1, data, 2, 2, 0);
 		}
 		else
-		{
 			iter[y][x] = 0;
-			return (1);
-		}
+		return (1);
 	}
 	if (rand() % 2 && data->fsim->map[y - 1][x] < data->fsim->map[y][x])
 	{
@@ -1724,10 +1637,8 @@ int	emulate_hidrogen(int x, int y, t_data *data)
 			emulate_fall(x, y - 1, data, 2, 2, 0);
 		}
 		else
-		{
 			iter[y][x] = 0;
-			return (1);
-		}
+		return (1);
 	}	
 	if (rand() % 2 && data->fsim->map[y - 1][x - 1] < data->fsim->map[y][x])
 	{
@@ -1744,10 +1655,8 @@ int	emulate_hidrogen(int x, int y, t_data *data)
 			emulate_fall(x - 1, y - 1, data, 2, 2, 0);
 		}
 		else
-		{
 			iter[y][x] = 0;
-			return (1);
-		}
+		return (1);
 	}	
 	if (rand() % 2 && data->fsim->map[y - 1][x + 1] < data->fsim->map[y][x])
 	{
@@ -1764,10 +1673,8 @@ int	emulate_hidrogen(int x, int y, t_data *data)
 			emulate_fall(x + 1, y - 1, data, 2, 2, 0);
 		}
 		else
-		{
 			iter[y][x] = 0;
-			return (1);
-		}
+		return (1);
 	}
 	return (0);
 }
@@ -1893,10 +1800,8 @@ int	emulate_fly(int x, int y, t_data *data)
 			emulate_fall(x, y + 1, data, 2, 2, 0);
 		}
 		else
-		{
 			iter[y][x] = 0;
-			return (1);
-		}
+		return (1);
 	}
 	if (rand() % 2 && data->fsim->map[y - 1][x] < data->fsim->map[y][x])
 	{
@@ -1925,10 +1830,8 @@ int	emulate_fly(int x, int y, t_data *data)
 			emulate_fall(x, y - 1, data, 2, 2, 0);
 		}
 		else
-		{
 			iter[y][x] = 0;
-			return (1);
-		}
+		return (1);
 	}	
 	if (rand() % 2 && data->fsim->map[y - 1][x - 1] < data->fsim->map[y][x])
 	{
@@ -1945,10 +1848,8 @@ int	emulate_fly(int x, int y, t_data *data)
 			emulate_fall(x - 1, y - 1, data, 2, 2, 0);
 		}
 		else
-		{
 			iter[y][x] = 0;
-			return (1);
-		}
+		return (1);
 	}	
 	if (rand() % 2 && data->fsim->map[y - 1][x + 1] < data->fsim->map[y][x])
 	{
@@ -1965,10 +1866,8 @@ int	emulate_fly(int x, int y, t_data *data)
 			emulate_fall(x + 1, y - 1, data, 2, 2, 0);
 		}
 		else
-		{
 			iter[y][x] = 0;
-			return (1);
-		}
+		return (1);
 	}
 	return (0);
 }
