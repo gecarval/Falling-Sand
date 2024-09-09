@@ -25,10 +25,10 @@
 # include "../libft/libft.h"
 
 // WINDOW MACROS
-# define WINX	(int)400
-# define WINY	(int)300
-# define WINDX	(int)800
-# define WINDY	(int)600
+# define WINX	(int)800
+# define WINY	(int)450
+# define WINDX	(int)1600
+# define WINDY	(int)900
 # define ESC	65307 
 # define ISO	0.6153
 
@@ -53,16 +53,18 @@
 #define MAT_ID_GUNPOWDER	(char)65
 #define MAT_ID_SOAP		(char)66
 #define MAT_ID_SAND		(char)67
-#define MAT_ID_STONE		(char)68
-#define MAT_ID_WOOD		(char)69
-#define MAT_ID_WOODF		(char)70
-#define MAT_ID_GLASS		(char)71
-#define MAT_ID_GLASSF		(char)72
-#define MAT_ID_WIND		(char)73
+#define MAT_ID_WETSAND		(char)68
+#define MAT_ID_STONE		(char)69
+#define MAT_ID_WOOD		(char)70
+#define MAT_ID_WOODF		(char)71
+#define MAT_ID_GLASS		(char)72
+#define MAT_ID_GLASSF		(char)73
+#define MAT_ID_WIND		(char)74
 
 // COLOR
 #define MAT_COL_EMPTY      0x000000
 #define MAT_COL_SAND       0xC2B280
+#define MAT_COL_WETSAND    0xB1A160
 #define MAT_COL_SALT       0xC8B4BE
 #define MAT_COL_BUBBLE     0xCCCCCC
 #define MAT_COL_GLASS      0x222233
@@ -241,6 +243,10 @@ void	draw_line(t_delta x, t_delta y, t_data *data, int color);
 void	draw_vertices(t_data *data, float_t ang);
 //FLUIDSIM
 void	render_fluidmap(t_data *data);
+void	render_fluidmap_pp(int x, int y, t_data *data);
+void	render_per_pixel(int x, int y, t_data *data);
+void	post_processing(int x, int y, t_data *data, int id, int col);
+void	process_material(int x, int y, t_data *data, int col);
 void	fluidsim_start(t_data *data);
 void	put_mat(int x, int y, t_data *data);
 void	process_gravity_r(t_data *data);
@@ -269,6 +275,7 @@ int		emulate_hidrogen(int x, int y, t_data *data);
 int		emulate_smoke(int x, int y, t_data *data);
 int		emulate_fog(int x, int y, t_data *data);
 int		emulate_fly(int x, int y, t_data *data);
+int		emulate_wetsand(int x, int y, t_data *data, int randed, int slide, int force, int inertialchance, int inertialres);
 // MAP READ
 void	set_height_range(t_map *map, t_pt *cur);
 void	fill_map(t_data *data, t_map *map);

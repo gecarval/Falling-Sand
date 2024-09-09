@@ -6,7 +6,7 @@
 /*   By: gecarval <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 17:38:51 by gecarval          #+#    #+#             */
-/*   Updated: 2024/09/06 19:13:01 by gecarval         ###   ########.fr       */
+/*   Updated: 2024/09/09 15:34:56 by gecarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,11 +106,11 @@ void	controls_mark(t_data *data)
 {
 	mlx_string_put(data->ini, data->win, 15, 15, 0xFFFFFF, "'LMB'=Brush_On ; 'RMB'=Brush_Off");
 	mlx_string_put(data->ini, data->win, 15, 30, 0xFFFFFF, "','=Decrease_Brush ; '.'=Increase_Brush");
-	mlx_string_put(data->ini, data->win, 15, 45, 0xFFFFFF, "Q=Empty ; W=Fire ; E=Steam");
-	mlx_string_put(data->ini, data->win, 15, 60, 0xFFFFFF, "R=Water ; A=Lava ; S=Sand");
-	mlx_string_put(data->ini, data->win, 15, 75, 0xFFFFFF, "D=Stone ; F=Propane ; Z=Acid");
-	mlx_string_put(data->ini, data->win, 15, 90, 0xFFFFFF, "X=WOOD ; C=OIL ; V=SOAP");
-	mlx_string_put(data->ini, data->win, 15, 105, 0xFFFFFF, "T=OXYGEN ; Y=HIDROGEN ; U=Fly");
+	mlx_string_put(data->ini, data->win, 15, 45, 0xFFFFFF, "Q=Empty ; W=Fire ; E=Steam ; R=Water");
+	mlx_string_put(data->ini, data->win, 15, 60, 0xFFFFFF, "A=Lava ; S=Sand ; D=Stone ; F=Propane");
+	mlx_string_put(data->ini, data->win, 15, 75, 0xFFFFFF, "Z=Acid ; X=WOOD ; C=OIL ; V=SOAP");
+	mlx_string_put(data->ini, data->win, 15, 90, 0xFFFFFF, "T=OXYGEN ; Y=HIDROGEN ; U=Fly ; G=WetSand");
+	mlx_string_put(data->ini, data->win, 15, 105, 0xFFFFFF, "H=GLASS");
 }
 
 void	render_background(t_data *data, int color)
@@ -158,6 +158,7 @@ int	mlx_anim(t_data *data)
 		render_background(data, 0x000000);
 		draw_vertices(data, data->iso);
 		mlx_put_image_to_window(data->ini, data->win, data->img->img_ptr, 0, 0);
+		mlx_clear_image
 		water_mark(data);
 		data->iso += data->anispeed;
 		if (data->iso > 6.28)
@@ -193,6 +194,12 @@ int	mlx_cooked(int key, t_data *data)
 		data->click_fill = MAT_ID_STEAM;
 	if (key == 'r')
 		data->click_fill = MAT_ID_WATER;
+	if (key == 't')
+		data->click_fill = MAT_ID_OXYGEN;
+	if (key == 'y')
+		data->click_fill = MAT_ID_HIDROGEN;
+	if (key == 'u')
+		data->click_fill = MAT_ID_FLY;
 	if (key == 'a')
 		data->click_fill = MAT_ID_LAVA;
 	if (key == 's')
@@ -201,6 +208,10 @@ int	mlx_cooked(int key, t_data *data)
 		data->click_fill = MAT_ID_STONE;
 	if (key == 'f')
 		data->click_fill = MAT_ID_PROPANE;
+	if (key == 'g')
+		data->click_fill = MAT_ID_WETSAND;
+	if (key == 'h')
+		data->click_fill = MAT_ID_GLASS;
 	if (key == 'z')
 		data->click_fill = MAT_ID_ACID;
 	if (key == 'x')
@@ -209,18 +220,15 @@ int	mlx_cooked(int key, t_data *data)
 		data->click_fill = MAT_ID_OIL;
 	if (key == 'v')
 		data->click_fill = MAT_ID_SOAP;
-	if (key == 't')
-		data->click_fill = MAT_ID_OXYGEN;
-	if (key == 'y')
-		data->click_fill = MAT_ID_HIDROGEN;
-	if (key == 'u')
-		data->click_fill = MAT_ID_FLY;
 	if (key == ESC)
 		exit_data(data, 0);
 	if (key == '1')
 		data->anicub *= -1;
 	if (key == '2')
+	{
+		render_fluidmap(data);
 		data->anifsim *= -1;
+	}
 	if (key == '.')
 		data->brush_size += 1;
 	if (key == ',')

@@ -6,7 +6,7 @@
 /*   By: gecarval <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:28:33 by gecarval          #+#    #+#             */
-/*   Updated: 2024/09/06 21:23:05 by gecarval         ###   ########.fr       */
+/*   Updated: 2024/09/09 15:33:52 by gecarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	push_momentum(int x, int y, t_data *data, int force)
 		if (i < WINX)
 			if (data->fsim->map[y][i] == data->fsim->map[y - 1][x])
 				r++;
-		if (data->fsim->map[y][i] == MAT_ID_WOOD)
+		if (data->fsim->map[y][i] == MAT_ID_WOOD && data->fsim->map[y][i] == MAT_ID_GLASS)
 			break ;
 		if (data->fsim->map[y][i] > data->fsim->map[y - 1][x])
 			if (rand() % force == 0)
@@ -51,7 +51,7 @@ void	push_momentum(int x, int y, t_data *data, int force)
 		if (i > 0)
 			if (data->fsim->map[y][i] == data->fsim->map[y - 1][x])
 				l++;
-		if (data->fsim->map[y][i] == MAT_ID_WOOD)
+		if (data->fsim->map[y][i] == MAT_ID_WOOD && data->fsim->map[y][i] == MAT_ID_GLASS)
 			break ;
 		if (data->fsim->map[y][i] > data->fsim->map[y - 1][x])
 			if (rand() % force == 0)
@@ -75,6 +75,7 @@ void	push_momentum(int x, int y, t_data *data, int force)
 	}
 	while (l > 0)
 	{
+		render_fluidmap_pp(x, y, data);
 		tmp = data->fsim->map[y][x - l];
 		data->fsim->map[y][x - l] = data->fsim->map[y][x - l + 1];
 		tmp = data->fsim->map[y][x - l + 1] = tmp;
@@ -87,6 +88,34 @@ void	push_momentum(int x, int y, t_data *data, int force)
 		tmp = data->fsim->map[y][x + r - 1] = tmp;
 		r--;
 	}
+}
+
+int	ft_find_side_id(int x, int y, t_data *data, char c, int dist)
+{
+	int	i;
+	int	l;
+	int	r;
+
+	//render_per_pixel(x, y, data);
+	i = x - dist;
+	l = 0;
+	while (i < x)
+	{
+		if (i > 0)
+			if (data->fsim->map[y][i] == c)
+				l++;
+		i++;
+	}
+	i = x + 1;
+	r = 0;
+	while (i < x + dist + 1)
+	{
+		if (i < WINX)
+			if (data->fsim->map[y][i] == c)
+				r++;
+		i++;
+	}
+	return (r + l);
 }
 
 int	equal_flud(int x, int y, t_data *data, char c, int dist)
@@ -138,6 +167,22 @@ int	slide_sand(int x, int y, t_data *data, int direc)
 		data->fsim->map[y][x] = swap;
 		return (1);
 	}
+	return (0);
+}
+
+int	emulate_wetsand(int x, int y, t_data *data, int randed, int slide, int force, int inertialchance, int inertialres)
+{
+	t_pt	pt;
+
+	pt = find_id(x, y, data, MAT_ID_FIRE);
+	if (pt.z == 1)
+	{
+		data->fsim->map[(int)pt.y][(int)pt.x] = MAT_ID_STEAM;
+		data->fsim->map[y][x] = MAT_ID_SAND;
+		return (1);
+	}
+	if (emulate_solid(x, y, data, randed, slide, force, inertialchance, inertialres))
+		return (1);
 	return (0);
 }
 
@@ -384,6 +429,7 @@ int	emulate_fall(int x, int y, t_data *data, int randed, int slide, int force)
 
 void	emulate_water(int x, int y, t_data *data, char c)
 {
+	t_pt	pt;
 	static int	iter[WINY][WINX];
 	static int	flud[WINY][WINX];
 	static int	update[WINY][WINX];
@@ -391,6 +437,13 @@ void	emulate_water(int x, int y, t_data *data, char c)
 	if (update[y][x] > 0)
 	{
 		update[y][x] = 0;
+		return ;
+	}
+	pt = find_id(x, y, data, MAT_ID_SAND);
+	if (pt.z == 1)
+	{
+		data->fsim->map[(int)pt.y][(int)pt.x] = MAT_ID_WETSAND;
+		data->fsim->map[y][x] = MAT_ID_EMPTY;
 		return ;
 	}
 	if (flud[y][x] == 0)
