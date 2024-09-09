@@ -76,7 +76,8 @@
 #define MAT_COL_WOOD       0xA1662F
 #define MAT_COL_WOODF      0xFF662F
 #define MAT_COL_SMOKE      0x323232
-#define MAT_COL_FIRE       0x961400
+#define MAT_COL_FIRE       0xEA1400
+#define MAT_COL_FIREF      0xEA4525
 #define MAT_COL_PROPANE    0xDDFFDD
 #define MAT_COL_SOAP       0xAADDAA
 #define MAT_COL_EMBER      0xC87814
@@ -89,7 +90,8 @@
 
 #define MAT_COL_HIDROGENG   0x777777
 #define MAT_COL_OXYGENG     0x071F55
-#define MAT_COL_FIREG       0x400000
+#define MAT_COL_FIREG       0x501010
+#define MAT_COL_SMOKEG      0x636363
 #define MAT_COL_FOGG        0x444444
 // STRUCTS
 typedef struct s_objinf

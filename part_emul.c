@@ -89,13 +89,13 @@ void	push_momentum(int x, int y, t_data *data, int force)
 	}
 }
 
-int	equal_flud(int x, int y, t_data *data, char c)
+int	equal_flud(int x, int y, t_data *data, char c, int dist)
 {
 	int	i;
 	int	l;
 	int	r;
 
-	i = x - 5;
+	i = x - dist;
 	l = 0;
 	while (i < x)
 	{
@@ -106,7 +106,7 @@ int	equal_flud(int x, int y, t_data *data, char c)
 	}
 	i = x + 1;
 	r = 0;
-	while (i < x + 6)
+	while (i < x + dist + 1)
 	{
 		if (i < WINX)
 			if (data->fsim->map[y][i] == c)
@@ -208,7 +208,7 @@ int	emulate_solid(int x, int y, t_data *data, int randed, int slide, int force, 
 			push_momentum(x, y + 1, data, force);
 		i = iter[y][x] + slide;
 		iter[y][x] = 0;
-		direc = equal_flud(x, y, data, data->fsim->map[y][x]);
+		direc = equal_flud(x, y, data, data->fsim->map[y][x], 5);
 		if (i <= 0)
 			break ;
 		while (i > 0)
@@ -292,7 +292,7 @@ int	emulate_fall(int x, int y, t_data *data, int randed, int slide, int force)
 			push_momentum(x, y + 1, data, force);
 		i = iter[y][x] + slide;
 		iter[y][x] = 0;
-		direc = equal_flud(x, y, data, data->fsim->map[y][x]);
+		direc = equal_flud(x, y, data, data->fsim->map[y][x], 5);
 		if (i <= 0)
 			break ;
 		while (i > 0)
@@ -400,7 +400,7 @@ void	emulate_water(int x, int y, t_data *data, char c)
 	flud[y][x] = 0;
 	if (data->fsim->map[y][x] == c)
 	{
-		if (rand() % 2 && (data->fsim->map[y][x - 1] < c && equal_flud(x, y, data, c) == 0))
+		if (rand() % 2 && (data->fsim->map[y][x - 1] < c && equal_flud(x, y, data, c, 5) == 0))
 		{
 			data->fsim->map[y][x] = data->fsim->map[y][x - 1];
 			data->fsim->map[y][x - 1] = c;
@@ -417,7 +417,7 @@ void	emulate_water(int x, int y, t_data *data, char c)
 				iter[y][x] = 0;
 			return ;
 		}
-		if (rand() % 2 && data->fsim->map[y][x + 1] < c)
+		else if (rand() % 2 && data->fsim->map[y][x + 1] < c)
 		{
 			data->fsim->map[y][x] = data->fsim->map[y][x + 1];
 			data->fsim->map[y][x + 1] = c;
@@ -562,7 +562,7 @@ void	emulate_steam(int x, int y, t_data *data, char c)
 	}
 	if (data->fsim->map[y][x] == c)
 	{
-		if (rand() % 2 && (data->fsim->map[y][x - 1] < c && equal_flud(x, y, data, c) == 0))
+		if (rand() % 2 && (data->fsim->map[y][x - 1] < c && equal_flud(x, y, data, c, 5) == 0))
 		{
 			data->fsim->map[y][x] = data->fsim->map[y][x - 1];
 			data->fsim->map[y][x - 1] = c;
@@ -745,65 +745,80 @@ int	emulate_fire(int x, int y, t_data *data)
 	}
 	if (rand() % 4 && data->fsim->map[y - 1][x] < data->fsim->map[y][x])
 	{
-		if (data->fsim->map[y - 1][x - 1] == MAT_ID_EMPTY)
-		{
-			swap = data->fsim->map[y - 1][x - 1];
-			data->fsim->map[y - 1][x - 1] = data->fsim->map[y - 1][x];
-			data->fsim->map[y - 1][x] = swap;
-		}
-		else if (data->fsim->map[y - 1][x + 1] == MAT_ID_EMPTY)
-		{
-			swap = data->fsim->map[y - 1][x + 1];
-			data->fsim->map[y - 1][x + 1] = data->fsim->map[y - 1][x];
-			data->fsim->map[y - 1][x] = swap;
-		}
 		swap = data->fsim->map[y - 1][x];
 		data->fsim->map[y - 1][x] = data->fsim->map[y][x];
 		data->fsim->map[y][x] = swap;
 		update[y - 1][x] += update[y][x] + 1;
 		update[y][x] = 0;
-		if (rand() % 2 && iter[y][x] < 2)
+		if (rand() % 4 && iter[y][x] < 3)
 		{
-			iter[y - 1][x] += iter[y][x] + 1;
+			iter[y + 1][x] += iter[y][x] + 1;
 			update[y - 1][x] = 0;
 			iter[y][x] = 0;
-			emulate_fall(x, y - 1, data, 2, -3, 0);
+			emulate_gas(x, y - 1, data);
+		}
+		else
+			iter[y][x] = 0;
+		return (1);
+	}
+	if (rand() % 5 == 0 && data->fsim->map[y + 1][x] < data->fsim->map[y][x])
+	{
+		if (data->fsim->map[y + 1][x - 1] == MAT_ID_EMPTY)
+		{
+			swap = data->fsim->map[y + 1][x - 1];
+			data->fsim->map[y + 1][x - 1] = data->fsim->map[y + 1][x];
+			data->fsim->map[y + 1][x] = swap;
+		}
+		else if (data->fsim->map[y + 1][x + 1] == MAT_ID_EMPTY)
+		{
+			swap = data->fsim->map[y + 1][x + 1];
+			data->fsim->map[y + 1][x + 1] = data->fsim->map[y + 1][x];
+			data->fsim->map[y + 1][x] = swap;
+		}
+		swap = data->fsim->map[y + 1][x];
+		data->fsim->map[y + 1][x] = data->fsim->map[y][x];
+		data->fsim->map[y][x] = swap;
+		update[y][x] = 0;
+		if (rand() % 3 && iter[y][x] < 3)
+		{
+			iter[y + 1][x] += iter[y][x] + 1;
+			update[y + 1][x] = 0;
+			iter[y][x] = 0;
+			emulate_gas(x, y + 1, data);
 		}
 		else
 			iter[y][x] = 0;
 		return (1);
 	}	
-	if (rand() % 2 && data->fsim->map[y - 1][x - 1] < data->fsim->map[y][x])
+	if (rand() % 2 && data->fsim->map[y + 1][x - 1] < data->fsim->map[y][x])
 	{
-		swap = data->fsim->map[y - 1][x - 1];
-		data->fsim->map[y - 1][x - 1] = data->fsim->map[y][x];
+		swap = data->fsim->map[y + 1][x - 1];
+		data->fsim->map[y + 1][x - 1] = data->fsim->map[y][x];
 		data->fsim->map[y][x] = swap;
-		update[y - 1][x - 1] += update[y][x] + 1;
 		update[y][x] = 0;
-		if (rand() % 2 && iter[y][x] < 2)
+		if (rand() % 2 && iter[y][x] < 1)
 		{
-			iter[y - 1][x - 1] += iter[y][x] + 1;
-			update[y - 1][x - 1] = 0;
+			iter[y + 1][x - 1] += iter[y][x] + 1;
+			update[y + 1][x - 1] = 0;
 			iter[y][x] = 0;
-			emulate_fall(x - 1, y - 1, data, 2, -3, 0);
+			emulate_gas(x - 1, y + 1, data);
 		}
 		else
 			iter[y][x] = 0;
 		return (1);
 	}	
-	if (rand() % 2 && data->fsim->map[y - 1][x + 1] < data->fsim->map[y][x])
+	if (rand() % 2 && data->fsim->map[y + 1][x + 1] < data->fsim->map[y][x])
 	{
-		swap = data->fsim->map[y - 1][x + 1];
-		data->fsim->map[y - 1][x + 1] = data->fsim->map[y][x];
+		swap = data->fsim->map[y + 1][x + 1];
+		data->fsim->map[y + 1][x + 1] = data->fsim->map[y][x];
 		data->fsim->map[y][x] = swap;
-		update[y - 1][x + 1] += iter[y][x] + 1;
 		update[y][x] = 0;
-		if (rand() % 2 && iter[y][x] < 2)
+		if (rand() % 2 && iter[y][x] < 1)
 		{
-			iter[y - 1][x + 1] += iter[y][x] + 1;
-			update[y - 1][x + 1] = 0;
+			iter[y + 1][x + 1] += iter[y][x] + 1;
+			update[y + 1][x + 1] = 0;
 			iter[y][x] = 0;
-			emulate_fall(x + 1, y - 1, data, 2, -3, 0);
+			emulate_gas(x + 1, y + 1, data);
 		}
 		else
 			iter[y][x] = 0;
@@ -1197,7 +1212,7 @@ void	emulate_oil(int x, int y, t_data *data, char c)
 				iter[y][x - 1] += iter[y][x] + 1;
 				update[y][x - 1] = 0;
 				iter[y][x] = 0;
-				emulate_water(x - 1, y, data, c);
+				emulate_oil(x - 1, y, data, c);
 			}
 			else
 				iter[y][x] = 0;
@@ -1214,7 +1229,7 @@ void	emulate_oil(int x, int y, t_data *data, char c)
 				iter[y][x + 1] += iter[y][x] + 1;
 				update[y][x + 1] = 0;
 				iter[y][x] = 0;
-				emulate_water(x + 1, y, data, c);
+				emulate_oil(x + 1, y, data, c);
 			}
 			else
 				iter[y][x] = 0;
@@ -1288,7 +1303,7 @@ void	emulate_oilf(int x, int y, t_data *data, char c)
 				iter[y][x - 1] += iter[y][x] + 1;
 				update[y][x - 1] = 0;
 				iter[y][x] = 0;
-				emulate_water(x - 1, y, data, c);
+				emulate_oilf(x - 1, y, data, c);
 			}
 			else
 				iter[y][x] = 0;
@@ -1305,7 +1320,7 @@ void	emulate_oilf(int x, int y, t_data *data, char c)
 				iter[y][x + 1] += iter[y][x] + 1;
 				update[y][x + 1] = 0;
 				iter[y][x] = 0;
-				emulate_water(x + 1, y, data, c);
+				emulate_oilf(x + 1, y, data, c);
 			}
 			else
 				iter[y][x] = 0;
@@ -1762,6 +1777,8 @@ void	emulate_glassf(int x, int y, t_data *data)
 
 int	emulate_fly(int x, int y, t_data *data)
 {
+	int		i;
+	int		j;
 	t_pt		pt;
 	char		swap;
 	static int	iter[WINY][WINX];
@@ -1780,13 +1797,34 @@ int	emulate_fly(int x, int y, t_data *data)
 		data->fsim->map[y][x] = MAT_ID_FIRE;
 	if (pt.z == 1)
 		return (1);
-	if (rand() % 400)
+	i = y + 2;
+	if (rand() % 50)
 	{
 		pt = find_around_id(x, y, data, MAT_ID_WOOD, 1);
 		if (pt.z == 1)
 			return (1);
 	}
-	if (rand() % 30 == 0 && data->fsim->map[y + 1][x] < data->fsim->map[y][x])
+	while (--i >= y - 1)
+	{
+		j = x - 2;
+		while (++j <= x + 1)
+		{
+			if (data->fsim->map[i][j] == MAT_ID_WOOD)
+			{
+				if (rand() % 25 == 0)
+				{
+					data->fsim->map[i][j] = MAT_ID_FLY;
+					data->fsim->map[y][x] = MAT_ID_SAND;
+					if (j > x || i < y)
+						update[i][j] = update[y][x] + 1;
+					update[y][x] = 0;
+					iter[y][x] = 0;
+				}
+				return (1);
+			}
+		}
+	}
+	if (rand() % 8 == 0 && data->fsim->map[y + 1][x] < data->fsim->map[y][x])
 	{
 		swap = data->fsim->map[y + 1][x];
 		data->fsim->map[y + 1][x] = data->fsim->map[y][x];
@@ -1838,7 +1876,6 @@ int	emulate_fly(int x, int y, t_data *data)
 		swap = data->fsim->map[y - 1][x - 1];
 		data->fsim->map[y - 1][x - 1] = data->fsim->map[y][x];
 		data->fsim->map[y][x] = swap;
-		update[y - 1][x - 1] += update[y][x] + 1;
 		update[y][x] = 0;
 		if (rand() % 2 && iter[y][x] < 3)
 		{
@@ -1851,7 +1888,7 @@ int	emulate_fly(int x, int y, t_data *data)
 			iter[y][x] = 0;
 		return (1);
 	}	
-	if (rand() % 2 && data->fsim->map[y - 1][x + 1] < data->fsim->map[y][x])
+	if (rand() % 7 && data->fsim->map[y - 1][x + 1] < data->fsim->map[y][x])
 	{
 		swap = data->fsim->map[y - 1][x + 1];
 		data->fsim->map[y - 1][x + 1] = data->fsim->map[y][x];

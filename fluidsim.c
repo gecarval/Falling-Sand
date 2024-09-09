@@ -112,11 +112,22 @@ void	render_fluidmap(t_data *data)
 			else if (data->fsim->map[y][x] == MAT_ID_FOG)
 				process_material(x, y, data, MAT_COL_FOG);
 			else if (data->fsim->map[y][x] == MAT_ID_FIRE)
+			{
+				if (rand() % 20)
 				process_material(x, y, data, MAT_COL_FIRE);
+				else
+				process_material(x, y, data, MAT_COL_FIREF);
+
+			}
 			else if (data->fsim->map[y][x] == MAT_ID_EMBER)
 				process_material(x, y, data, MAT_COL_EMBER);
 			else if (data->fsim->map[y][x] == MAT_ID_SMOKE)
-				process_material(x, y, data, MAT_COL_SMOKE);
+			{
+				if (rand() % 7)
+					process_material(x, y, data, MAT_COL_SMOKE);
+				else
+					process_material(x, y, data, MAT_COL_SMOKEG);
+			}
 			else if (data->fsim->map[y][x] == MAT_ID_PROPANE)
 				process_material(x, y, data, MAT_COL_PROPANE);
 			else if (data->fsim->map[y][x] == MAT_ID_STEAM)
