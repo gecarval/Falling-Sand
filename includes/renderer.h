@@ -49,17 +49,21 @@
 #define MAT_ID_OIL		(char)61
 #define MAT_ID_OILF		(char)62
 #define MAT_ID_WATER		(char)63
-#define MAT_ID_LAVA		(char)64
-#define MAT_ID_GUNPOWDER	(char)65
-#define MAT_ID_SOAP		(char)66
-#define MAT_ID_SAND		(char)67
-#define MAT_ID_WETSAND		(char)68
-#define MAT_ID_STONE		(char)69
-#define MAT_ID_WOOD		(char)70
-#define MAT_ID_WOODF		(char)71
-#define MAT_ID_GLASS		(char)72
-#define MAT_ID_GLASSF		(char)73
-#define MAT_ID_WIND		(char)74
+#define MAT_ID_MOLTENIRON	(char)64
+#define MAT_ID_LAVA		(char)65
+#define MAT_ID_GUNPOWDER	(char)66
+#define MAT_ID_SOAP		(char)67
+#define MAT_ID_SAND		(char)68
+#define MAT_ID_WETSAND		(char)69
+#define MAT_ID_STONE		(char)70
+#define MAT_ID_WOOD		(char)71
+#define MAT_ID_WOODF		(char)72
+#define MAT_ID_GLASS		(char)73
+#define MAT_ID_GLASSF		(char)74
+#define MAT_ID_RUST		(char)75
+#define MAT_ID_IRON		(char)76
+#define MAT_ID_HOTIRON		(char)77
+#define MAT_ID_WIND		(char)78
 
 // COLOR
 #define MAT_COL_EMPTY      0x000000
@@ -80,6 +84,10 @@
 #define MAT_COL_SMOKE      0x323232
 #define MAT_COL_FIRE       0xEA1400
 #define MAT_COL_FIREF      0xEA4525
+#define MAT_COL_IRON       0xB8B4BE
+#define MAT_COL_HOTIRON    0xF8B4B4
+#define MAT_COL_MOLTENIRON 0xFFA4A4
+#define MAT_COL_RUST       0x8A3430
 #define MAT_COL_PROPANE    0xDDFFDD
 #define MAT_COL_SOAP       0xAADDAA
 #define MAT_COL_EMBER      0xC87814
@@ -93,6 +101,8 @@
 #define MAT_COL_HIDROGENG   0x777777
 #define MAT_COL_OXYGENG     0x071F55
 #define MAT_COL_FIREG       0x501010
+#define MAT_COL_HOTIRONG    0x701818
+#define MAT_COL_MOLTENIRONG 0x802020
 #define MAT_COL_SMOKEG      0x636363
 #define MAT_COL_FOGG        0x444444
 // STRUCTS
@@ -264,6 +274,10 @@ void	emulate_oil(int x, int y, t_data *data, char c);
 void	emulate_oilf(int x, int y, t_data *data, char c);
 void	emulate_soap(int x, int y, t_data *data);
 void	emulate_glassf(int x, int y, t_data *data);
+void	emulate_iron(int x, int y, t_data *data);
+void	emulate_rust(int x, int y, t_data *data);
+void	emulate_hotiron(int x, int y, t_data *data);
+void	emulate_molteniron(int x, int y, t_data *data, char c);
 int		emulate_gas(int x, int y, t_data *data);
 int		emulate_fire(int x, int y, t_data *data);
 int		emulate_fall(int x, int y, t_data *data, int randed, int slide, int force);

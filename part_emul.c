@@ -6,7 +6,7 @@
 /*   By: gecarval <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:28:33 by gecarval          #+#    #+#             */
-/*   Updated: 2024/09/09 15:33:52 by gecarval         ###   ########.fr       */
+/*   Updated: 2024/09/09 20:45:30 by gecarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,10 @@ void	push_momentum(int x, int y, t_data *data, int force)
 		if (i < WINX)
 			if (data->fsim->map[y][i] == data->fsim->map[y - 1][x])
 				r++;
-		if (data->fsim->map[y][i] == MAT_ID_WOOD && data->fsim->map[y][i] == MAT_ID_GLASS)
+		if (data->fsim->map[y][i] == MAT_ID_WOOD
+			&& data->fsim->map[y][i] == MAT_ID_GLASS
+			&& data->fsim->map[y][i] == MAT_ID_IRON
+			&& data->fsim->map[y][i] == MAT_ID_HOTIRON)
 			break ;
 		if (data->fsim->map[y][i] > data->fsim->map[y - 1][x])
 			if (rand() % force == 0)
@@ -51,7 +54,10 @@ void	push_momentum(int x, int y, t_data *data, int force)
 		if (i > 0)
 			if (data->fsim->map[y][i] == data->fsim->map[y - 1][x])
 				l++;
-		if (data->fsim->map[y][i] == MAT_ID_WOOD && data->fsim->map[y][i] == MAT_ID_GLASS)
+		if (data->fsim->map[y][i] == MAT_ID_WOOD
+			&& data->fsim->map[y][i] == MAT_ID_GLASS
+			&& data->fsim->map[y][i] == MAT_ID_IRON
+			&& data->fsim->map[y][i] == MAT_ID_HOTIRON)
 			break ;
 		if (data->fsim->map[y][i] > data->fsim->map[y - 1][x])
 			if (rand() % force == 0)
@@ -439,12 +445,15 @@ void	emulate_water(int x, int y, t_data *data, char c)
 		update[y][x] = 0;
 		return ;
 	}
-	pt = find_id(x, y, data, MAT_ID_SAND);
-	if (pt.z == 1)
+	if (rand() % 150 == 0)
 	{
-		data->fsim->map[(int)pt.y][(int)pt.x] = MAT_ID_WETSAND;
-		data->fsim->map[y][x] = MAT_ID_EMPTY;
-		return ;
+		pt = find_id(x, y, data, MAT_ID_SAND);
+		if (pt.z == 1)
+		{
+			data->fsim->map[(int)pt.y][(int)pt.x] = MAT_ID_WETSAND;
+			data->fsim->map[y][x] = MAT_ID_EMPTY;
+			return ;
+		}
 	}
 	if (flud[y][x] == 0)
 		if (y < WINY - 2)
@@ -1249,6 +1258,12 @@ void	emulate_oil(int x, int y, t_data *data, char c)
 		data->fsim->map[y][x] = MAT_ID_OILF;
 		return ;
 	}
+	pt = find_id(x, y, data, MAT_ID_MOLTENIRON);
+	if (pt.z == 1)
+	{
+		data->fsim->map[y][x] = MAT_ID_OILF;
+		return ;
+	}
 	if (y < (int)WINY - 2 && emulate_fall(x, y, data, 4, 3, 2) == 1)
 	{
 		return ;
@@ -1747,6 +1762,265 @@ int	emulate_hidrogen(int x, int y, t_data *data)
 	return (0);
 }
 
+void	emulate_iron(int x, int y, t_data *data)
+{
+	t_pt	pt;
+
+	if (rand() % 75)
+	{
+		pt = find_id(x, y, data, MAT_ID_OXYGEN);
+		if (pt.z == 1)
+		{
+			data->fsim->map[(int)pt.y][(int)pt.x] = MAT_ID_EMPTY;
+			data->fsim->map[y][x] = MAT_ID_RUST;
+			return ;
+		}
+	}
+	if (rand() % 50)
+	{
+		pt = find_id(x, y, data, MAT_ID_FIRE);
+		if (pt.z == 1)
+		{
+			data->fsim->map[(int)pt.y][(int)pt.x] = MAT_ID_SMOKE;
+			data->fsim->map[y][x] = MAT_ID_HOTIRON;
+			return ;
+		}
+	}
+	if (rand() % 30)
+	{
+		pt = find_id(x, y, data, MAT_ID_LAVA);
+		if (pt.z == 1)
+		{
+			data->fsim->map[(int)pt.y][(int)pt.x] = MAT_ID_STONE;
+			data->fsim->map[y][x] = MAT_ID_HOTIRON;
+			return ;
+		}
+	}
+}
+
+int	ft_heat_sink(int x, int y, t_data *data)
+{
+	int		i;
+	int		j;
+
+	if (data->fsim->map[y][x + 1] == MAT_ID_IRON && data->fsim->map[y + 1][x + 1] != MAT_ID_IRON)
+	{
+		data->fsim->map[y][x + 1] = MAT_ID_HOTIRON;
+		data->fsim->map[y][x] = MAT_ID_IRON;
+		return (4);
+	}
+	i = y + 2;
+	while (--i >= y - 1)
+	{
+		j = x - 2;
+		while (++j <= x + 1)
+		{
+			if (data->fsim->map[i][j] == MAT_ID_IRON)
+			{
+				if (rand() % 10 == 0)
+				{
+					data->fsim->map[i][j] = MAT_ID_HOTIRON;
+					data->fsim->map[y][x] = MAT_ID_IRON;
+					if ((y - i) > 0 && (x - j) > 0)
+						return (1);
+					else if ((y - i) > 0 && (x - j) == 0)
+						return (2);
+					else if ((y - i) > 0 && (x - j) < 0)
+						return (3);
+					else if ((y - i) == 0 && (x - j) < 0)
+						return (4);
+					else
+						return (0);
+				}
+			}
+		}
+	}
+	return (0);
+}
+
+void	emulate_hotiron(int x, int y, t_data *data)
+{
+	t_pt	pt;
+	int	mv;
+	static int	update[WINY][WINX];
+
+	if (update[y][x] > 0)
+	{
+		update[y][x] = 0;
+		return ;
+	}
+	if (rand() % 50 == 0)
+	{
+		pt = find_id(x, y, data, MAT_ID_OXYGEN);
+		if (pt.z == 1)
+		{
+			data->fsim->map[(int)pt.y][(int)pt.x] = MAT_ID_FIRE;
+			if (rand() % 25 == 0)
+				data->fsim->map[y][x] = MAT_ID_IRON;
+			return ;
+		}
+	}
+	if (rand() % 50 == 0)
+	{
+		pt = find_id(x, y, data, MAT_ID_HIDROGEN);
+		if (pt.z == 1)
+		{
+			data->fsim->map[(int)pt.y][(int)pt.x] = MAT_ID_FIRE;
+			if (rand() % 25 == 0)
+				data->fsim->map[y][x] = MAT_ID_IRON;
+			return ;
+		}
+	}
+	if (rand() % 30 == 0)
+	{
+		pt = find_id(x, y, data, MAT_ID_WATER);
+		if (pt.z == 1)
+		{
+			data->fsim->map[(int)pt.y][(int)pt.x] = MAT_ID_STEAM;
+			if (rand() % 5)
+				data->fsim->map[y][x] = MAT_ID_IRON;
+			return ;
+		}
+	}
+	if (rand() % 100 == 0)
+	{
+		pt = find_id(x, y, data, MAT_ID_SAND);
+		if (pt.z == 1)
+		{
+			data->fsim->map[(int)pt.y][(int)pt.x] = MAT_ID_GLASSF;
+			data->fsim->map[y][x] = MAT_ID_IRON;
+			return ;
+		}
+	}
+	if (rand() % 500 == 0)
+	{
+		pt = find_id(x, y, data, MAT_ID_FIRE);
+		if (pt.z == 1)
+		{
+			data->fsim->map[(int)pt.y][(int)pt.x] = MAT_ID_SMOKE;
+			data->fsim->map[y][x] = MAT_ID_MOLTENIRON;
+			return ;
+		}
+	}
+	if (rand() % 500 == 0)
+	{
+		data->fsim->map[y][x] = MAT_ID_IRON;
+		return ;
+	}
+	if (rand() % 5)
+	{
+		mv = ft_heat_sink(x, y, data);
+		if (mv == 1)
+			update[y - 1][x - 1] += update[y][x] + 1;
+		else if (mv == 2)
+			update[y - 1][x] += update[y][x] + 1;
+		else if (mv == 3)
+			update[y - 1][x + 1] += update[y][x] + 1;
+		else if (mv == 4)
+			update[y][x + 1] += update[y][x] + 1;
+		update[y][x] = 0;
+	}
+}
+
+void	emulate_molteniron(int x, int y, t_data *data, char c)
+{
+	t_pt		pt;
+	static int	update[WINY][WINX];
+
+	if (update[y][x] > 0)
+	{
+		update[y][x] = 0;
+		return ;
+	}
+	if (rand() % 4 == 0)
+	{
+		pt = find_id(x, y, data, MAT_ID_WATER);
+		if (pt.z == 1)
+		{
+			data->fsim->map[(int)pt.y][(int)pt.x] = MAT_ID_STEAM;
+			data->fsim->map[y][x] = MAT_ID_HOTIRON;
+			return ;
+		}
+	}
+	if (rand() % 10 == 0)
+	{
+		pt = find_id(x, y, data, MAT_ID_SAND);
+		if (pt.z == 1)
+		{
+			data->fsim->map[(int)pt.y][(int)pt.x] = MAT_ID_GLASSF;
+			data->fsim->map[y][x] = MAT_ID_HOTIRON;
+			return ;
+		}
+	}
+	if (rand() % 100 == 0)
+	{
+		pt = find_id(x, y, data, MAT_ID_HOTIRON);
+		if (pt.z == 1)
+		{
+			data->fsim->map[(int)pt.y][(int)pt.x] = c;
+			data->fsim->map[y][x] = c;
+			return ;
+		}
+	}
+	if (rand() % 3 == 0)
+		return ;
+	if (y < WINY - 2 && emulate_fall(x, y, data, 1, -2, 2))
+		return ;
+	if (data->fsim->map[y][x] == c)
+	{
+		if (rand() % 2 && data->fsim->map[y][x - 1] < c)
+		{
+			data->fsim->map[y][x] = data->fsim->map[y][x - 1];
+			data->fsim->map[y][x - 1] = c;
+			update[y][x] = 0;
+			return ;
+		}
+		if (rand() % 2 && data->fsim->map[y][x + 1] < c)
+		{
+			data->fsim->map[y][x] = data->fsim->map[y][x + 1];
+			data->fsim->map[y][x + 1] = c;
+			update[y][x + 1] += update[y][x] + 1;
+			update[y][x] = 0;
+			return ;
+		}
+	}
+}
+
+void	emulate_rust(int x, int y, t_data *data)
+{
+	t_pt	pt;
+
+	pt = find_id(x, y, data, MAT_ID_FIRE);
+	if (pt.z == 1)
+	{
+		data->fsim->map[(int)pt.y][(int)pt.x] = MAT_ID_SMOKE;
+		data->fsim->map[y][x] = MAT_ID_IRON;
+		return ;
+	}
+	if (rand() % 75 == 0)
+	{
+		pt = find_id(x, y, data, MAT_ID_HOTIRON);
+		if (pt.z == 1)
+			data->fsim->map[y][x] = MAT_ID_IRON;
+		return ;
+	}
+	if (rand() % 50 == 0)
+	{
+		pt = find_id(x, y, data, MAT_ID_MOLTENIRON);
+		if (pt.z == 1)
+			data->fsim->map[y][x] = MAT_ID_IRON;
+		return ;
+	}
+	if (rand() % 500)
+	{
+		pt = find_id(x, y, data, MAT_ID_IRON);
+		if (pt.z == 1)
+			return ;
+	}
+	if (emulate_solid(x, y, data, 2, 2, 5, 10, 1) == 1)
+		return ;
+}
+
 void	emulate_wood(int x, int y, t_data *data)
 {
 	t_pt	pt;
@@ -1762,6 +2036,17 @@ void	emulate_wood(int x, int y, t_data *data)
 	{
 		data->fsim->map[y][x] = MAT_ID_WOODF;
 		return ;
+	}
+	if (rand() % 50)
+	{
+		pt = find_id(x, y, data, MAT_ID_HOTIRON);
+		if (pt.z == 1)
+		{
+			data->fsim->map[y][x] = MAT_ID_WOODF;
+			if (rand() % 25)
+				data->fsim->map[(int)pt.y][(int)pt.x] = MAT_ID_IRON;
+			return ;
+		}
 	}
 }
 

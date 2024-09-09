@@ -6,7 +6,7 @@
 /*   By: gecarval <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 17:38:51 by gecarval          #+#    #+#             */
-/*   Updated: 2024/09/09 15:34:56 by gecarval         ###   ########.fr       */
+/*   Updated: 2024/09/09 17:57:21 by gecarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ void	controls_mark(t_data *data)
 	mlx_string_put(data->ini, data->win, 15, 60, 0xFFFFFF, "A=Lava ; S=Sand ; D=Stone ; F=Propane");
 	mlx_string_put(data->ini, data->win, 15, 75, 0xFFFFFF, "Z=Acid ; X=WOOD ; C=OIL ; V=SOAP");
 	mlx_string_put(data->ini, data->win, 15, 90, 0xFFFFFF, "T=OXYGEN ; Y=HIDROGEN ; U=Fly ; G=WetSand");
-	mlx_string_put(data->ini, data->win, 15, 105, 0xFFFFFF, "H=GLASS");
+	mlx_string_put(data->ini, data->win, 15, 105, 0xFFFFFF, "H=GLASS ; J=IRON ; K=Rust");
 }
 
 void	render_background(t_data *data, int color)
@@ -158,7 +158,6 @@ int	mlx_anim(t_data *data)
 		render_background(data, 0x000000);
 		draw_vertices(data, data->iso);
 		mlx_put_image_to_window(data->ini, data->win, data->img->img_ptr, 0, 0);
-		mlx_clear_image
 		water_mark(data);
 		data->iso += data->anispeed;
 		if (data->iso > 6.28)
@@ -212,6 +211,10 @@ int	mlx_cooked(int key, t_data *data)
 		data->click_fill = MAT_ID_WETSAND;
 	if (key == 'h')
 		data->click_fill = MAT_ID_GLASS;
+	if (key == 'j')
+		data->click_fill = MAT_ID_IRON;
+	if (key == 'k')
+		data->click_fill = MAT_ID_RUST;
 	if (key == 'z')
 		data->click_fill = MAT_ID_ACID;
 	if (key == 'x')

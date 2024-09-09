@@ -6,49 +6,11 @@
 /*   By: gecarval <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 14:24:07 by gecarval          #+#    #+#             */
-/*   Updated: 2024/09/09 15:34:30 by gecarval         ###   ########.fr       */
+/*   Updated: 2024/09/09 18:13:03 by gecarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/renderer.h"
-
-void	post_processing_pp(int x, int y, t_data *data, char id, int col)
-{
-	if (data->fsim->map[y][x] != id)
-		return ;
-	if (x + 1 < WINX)
-	{
-		if (data->fsim->map[y][x - 1] == MAT_ID_EMPTY)
-		{
-			pixel_to_img((x - 1) * 2 + 1, y * 2, data, col);
-			pixel_to_img((x - 1) * 2 + 1, y * 2 + 1, data, col);
-		}
-	}
-	if (x - 1 > 0)
-	{
-		if (data->fsim->map[y][x + 1] == MAT_ID_EMPTY)
-		{
-			pixel_to_img((x + 1) * 2, y * 2, data, col);
-			pixel_to_img((x + 1) * 2, y * 2 + 1, data, col);
-		}
-	}
-	if (y + 1 < WINY)
-	{
-		if (data->fsim->map[y - 1][x] == MAT_ID_EMPTY)
-		{
-			pixel_to_img(x * 2, (y - 1) * 2 + 1, data, col);
-			pixel_to_img(x * 2 + 1, (y - 1) * 2 + 1, data, col);
-		}
-	}
-	if (y - 1 > 0)
-	{
-		if (data->fsim->map[y + 1][x] == MAT_ID_EMPTY)
-		{
-			pixel_to_img(x * 2, (y + 1) * 2, data, col);
-			pixel_to_img(x * 2 + 1, (y + 1) * 2, data, col);
-		}
-	}
-}
 
 void	post_processing(int x, int y, t_data *data, int id, int col)
 {
@@ -100,6 +62,8 @@ void	render_fluidmap(t_data *data)
 				process_material(x, y, data, MAT_COL_EMPTY);
 				post_processing(x, y, data, MAT_ID_FIRE, MAT_COL_FIREG);
 				post_processing(x, y, data, MAT_ID_LAVA, MAT_COL_FIREG);
+				post_processing(x, y, data, MAT_ID_MOLTENIRON, MAT_COL_MOLTENIRONG);
+				post_processing(x, y, data, MAT_ID_HOTIRON, MAT_COL_HOTIRONG);
 				post_processing(x, y, data, MAT_ID_WATER, MAT_COL_WATER);
 				post_processing(x, y, data, MAT_ID_BUBBLE, MAT_COL_BUBBLE);
 				post_processing(x, y, data, MAT_ID_HIDROGEN, MAT_COL_HIDROGENG);
@@ -107,6 +71,12 @@ void	render_fluidmap(t_data *data)
 				post_processing(x, y, data, MAT_ID_FOG, MAT_COL_FOGG);
 				post_processing(x, y, data, MAT_ID_GLASS, MAT_COL_GLASSF);
 			}
+			else if (data->fsim->map[y][x] == MAT_ID_HOTIRON)
+				process_material(x, y, data, MAT_COL_HOTIRON);
+			else if (data->fsim->map[y][x] == MAT_ID_IRON)
+				process_material(x, y, data, MAT_COL_IRON);
+			else if (data->fsim->map[y][x] == MAT_ID_RUST)
+				process_material(x, y, data, MAT_COL_RUST);
 			else if (data->fsim->map[y][x] == MAT_ID_GLASSF)
 				process_material(x, y, data, MAT_COL_GLASSF);
 			else if (data->fsim->map[y][x] == MAT_ID_GLASS)
@@ -140,6 +110,8 @@ void	render_fluidmap(t_data *data)
 				process_material(x, y, data, MAT_COL_SOAP);
 			else if (data->fsim->map[y][x] == MAT_ID_GUNPOWDER)
 				process_material(x, y, data, MAT_COL_GUNPOWDER);
+			else if (data->fsim->map[y][x] == MAT_ID_MOLTENIRON)
+				process_material(x, y, data, MAT_COL_MOLTENIRON);
 			else if (data->fsim->map[y][x] == MAT_ID_LAVA)
 				process_material(x, y, data, MAT_COL_LAVA);
 			else if (data->fsim->map[y][x] == MAT_ID_WATER)
@@ -323,7 +295,7 @@ void	process_gravity(t_data *data)
 				emulate_soap(x, y, data);
 			else if (data->fsim->map[y][x] == MAT_ID_SAND)		//SAND
 				emulate_solid(x, y, data, 2, 3, 4, 1, 10);
-			else if (data->fsim->map[y][x] == MAT_ID_WETSAND)		//SAND
+			else if (data->fsim->map[y][x] == MAT_ID_WETSAND)	//WET SAND
 				emulate_wetsand(x, y, data, 2, 2, 5, 2, 6);
 			else if (data->fsim->map[y][x] == MAT_ID_STONE)		//STONE
 				emulate_solid(x, y, data, 1, -1, 8, 10, 1);
@@ -335,6 +307,14 @@ void	process_gravity(t_data *data)
 				;
 			else if (data->fsim->map[y][x] == MAT_ID_GLASSF)	//GLASS ON FIRE
 				emulate_glassf(x, y, data);
+			else if (data->fsim->map[y][x] == MAT_ID_IRON)		//IRON
+				emulate_iron(x, y, data);
+			else if (data->fsim->map[y][x] == MAT_ID_HOTIRON)	//HOT IRON
+				emulate_hotiron(x, y, data);
+			else if (data->fsim->map[y][x] == MAT_ID_MOLTENIRON)	//MOLTEN IRON
+				emulate_molteniron(x, y, data, MAT_ID_MOLTENIRON);
+			else if (data->fsim->map[y][x] == MAT_ID_RUST)		//RUST
+				emulate_rust(x, y, data);
 		}
 	}
 }
@@ -370,6 +350,44 @@ void	render_per_pixel(int x, int y, t_data *data)
 		render_fluidmap_pp(x - 1, y + 1, data);
 	if (y + 1 < WINY && x + 1 < WINX)
 		render_fluidmap_pp(x + 1, y + 1, data);
+}
+
+void	post_processing_pp(int x, int y, t_data *data, char id, int col)
+{
+	if (data->fsim->map[y][x] != id)
+		return ;
+	if (x + 1 < WINX)
+	{
+		if (data->fsim->map[y][x - 1] == MAT_ID_EMPTY)
+		{
+			pixel_to_img((x - 1) * 2 + 1, y * 2, data, col);
+			pixel_to_img((x - 1) * 2 + 1, y * 2 + 1, data, col);
+		}
+	}
+	if (x - 1 > 0)
+	{
+		if (data->fsim->map[y][x + 1] == MAT_ID_EMPTY)
+		{
+			pixel_to_img((x + 1) * 2, y * 2, data, col);
+			pixel_to_img((x + 1) * 2, y * 2 + 1, data, col);
+		}
+	}
+	if (y + 1 < WINY)
+	{
+		if (data->fsim->map[y - 1][x] == MAT_ID_EMPTY)
+		{
+			pixel_to_img(x * 2, (y - 1) * 2 + 1, data, col);
+			pixel_to_img(x * 2 + 1, (y - 1) * 2 + 1, data, col);
+		}
+	}
+	if (y - 1 > 0)
+	{
+		if (data->fsim->map[y + 1][x] == MAT_ID_EMPTY)
+		{
+			pixel_to_img(x * 2, (y + 1) * 2, data, col);
+			pixel_to_img(x * 2 + 1, (y + 1) * 2, data, col);
+		}
+	}
 }
 
 void	render_fluidmap_pp(int x, int y, t_data *data)
