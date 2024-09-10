@@ -6,7 +6,7 @@
 /*   By: gecarval <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 17:38:51 by gecarval          #+#    #+#             */
-/*   Updated: 2024/09/09 17:57:21 by gecarval         ###   ########.fr       */
+/*   Updated: 2024/09/10 18:50:22 by gecarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,6 +179,7 @@ int	mlx_anim(t_data *data)
 	{
 		mlx_mouse_get_pos(data->ini, data->win, &data->mposx, &data->mposy);
 		put_mat(data->mposx / 2, data->mposy / 2, data);
+//		circle_putmat(data->mposx / 2, data->mposy / 2, data->brush_size, data);
 	}
 	return (0);
 }
@@ -199,6 +200,8 @@ int	mlx_cooked(int key, t_data *data)
 		data->click_fill = MAT_ID_HIDROGEN;
 	if (key == 'u')
 		data->click_fill = MAT_ID_FLY;
+	if (key == 'i')
+		data->click_fill = MAT_ID_GUNPOWDER;
 	if (key == 'a')
 		data->click_fill = MAT_ID_LAVA;
 	if (key == 's')
@@ -223,6 +226,8 @@ int	mlx_cooked(int key, t_data *data)
 		data->click_fill = MAT_ID_OIL;
 	if (key == 'v')
 		data->click_fill = MAT_ID_SOAP;
+	if (key == 'b')
+		data->click_fill = MAT_ID_MISSILE;
 	if (key == ESC)
 		exit_data(data, 0);
 	if (key == '1')

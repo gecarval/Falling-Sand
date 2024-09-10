@@ -6,7 +6,7 @@
 /*   By: gecarval <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 15:28:33 by gecarval          #+#    #+#             */
-/*   Updated: 2024/09/10 14:17:23 by gecarval         ###   ########.fr       */
+/*   Updated: 2024/09/10 19:10:25 by gecarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,22 +173,6 @@ int	slide_sand(int x, int y, t_data *data, int direc)
 		data->fsim->map[y][x] = swap;
 		return (1);
 	}
-	return (0);
-}
-
-int	emulate_wetsand(int x, int y, t_data *data, int randed, int slide, int force, int inertialchance, int inertialres)
-{
-	t_pt	pt;
-
-	pt = find_id(x, y, data, MAT_ID_FIRE);
-	if (pt.z == 1)
-	{
-		data->fsim->map[(int)pt.y][(int)pt.x] = MAT_ID_STEAM;
-		data->fsim->map[y][x] = MAT_ID_SAND;
-		return (1);
-	}
-	if (emulate_solid(x, y, data, randed, slide, force, inertialchance, inertialres))
-		return (1);
 	return (0);
 }
 
@@ -428,6 +412,194 @@ int	emulate_fall(int x, int y, t_data *data, int randed, int slide, int force)
 	else
 		equal = 0;
 	return (0);
+}
+
+int	emulate_wetsand(int x, int y, t_data *data, int randed, int slide, int force, int inertialchance, int inertialres)
+{
+	t_pt	pt;
+
+	if (rand() % 4 == 0)
+	{
+		pt = find_id(x, y, data, MAT_ID_FIRE);
+		if (pt.z == 1)
+		{
+			data->fsim->map[(int)pt.y][(int)pt.x] = MAT_ID_STEAM;
+			data->fsim->map[y][x] = MAT_ID_SAND;
+			return (1);
+		}
+	}
+	if (rand() % 3 == 0)
+	{
+		pt = find_id(x, y, data, MAT_ID_LAVA);
+		if (pt.z == 1)
+		{
+			pt = find_around_id(x, y, data, MAT_ID_EMPTY, 5);
+			if (pt.z == 1)
+			{
+				data->fsim->map[(int)pt.y][(int)pt.x] = MAT_ID_STEAM;
+				data->fsim->map[y][x] = MAT_ID_SAND;
+				pt = find_id(x, y, data, MAT_ID_LAVA);
+				data->fsim->map[(int)pt.y][(int)pt.x] = MAT_ID_STONE;
+				return (1);
+			}
+		}
+	}
+	if (emulate_solid(x, y, data, randed, slide, force, inertialchance, inertialres))
+		return (1);
+	return (0);
+}
+
+void	explosion_calc(int xc, int yc, int x, int y, t_data *data, int id, int res, int thougth)
+{
+	if (xc <= 0 || xc >= WINX)
+		return ;
+	if (yc <= 0 || yc >= WINX)
+		return ;
+	if ((yc + y > 0 && yc + y < WINY) && (xc + x > 0 && xc + x < WINX))
+	{
+		if(data->fsim->map[yc + y][xc + x] != 'z' && data->fsim->map[yc + y][xc + x] != thougth)
+		{
+			if (data->fsim->map[yc + y][xc + x] == MAT_ID_EMPTY)
+				data->fsim->map[yc + y][xc + x] = id;
+			else if (data->fsim->map[yc + y][xc + x] != MAT_ID_EMPTY && rand() % res == 0)
+				data->fsim->map[yc + y][xc + x] = id;
+		}
+	}
+	if ((yc + y > 0 && yc + y < WINY) && (xc - x > 0 && xc - x < WINX))
+	{
+		if(data->fsim->map[yc + y][xc - x] != 'z' && data->fsim->map[yc + y][xc - x] != thougth)
+		{
+			if (data->fsim->map[yc + y][xc - x] == MAT_ID_EMPTY)
+				data->fsim->map[yc + y][xc - x] = id;
+			else if (data->fsim->map[yc + y][xc - x] != MAT_ID_EMPTY && rand() % res == 0)
+				data->fsim->map[yc + y][xc - x] = id;
+		}
+	}
+	if ((yc - y > 0 && yc - y < WINY) && (xc + x > 0 && xc + x < WINX))
+	{
+		if(data->fsim->map[yc - y][xc + x] != 'z' && data->fsim->map[yc - y][xc + x] != thougth)
+		{
+			if (data->fsim->map[yc - y][xc + x] == MAT_ID_EMPTY)
+				data->fsim->map[yc - y][xc + x] = id;
+			else if (data->fsim->map[yc - y][xc + x] != MAT_ID_EMPTY && rand() % res == 0)
+				data->fsim->map[yc - y][xc + x] = id;
+		}
+	}
+	if ((yc - y > 0 && yc - y < WINY) && (xc - x > 0 && xc - x < WINX))
+	{
+		if(data->fsim->map[yc - y][xc - x] != 'z' && data->fsim->map[yc - y][xc - x] != thougth)
+		{
+			if (data->fsim->map[yc - y][xc - x] == MAT_ID_EMPTY)
+				data->fsim->map[yc - y][xc - x] = id;
+			else if (data->fsim->map[yc - y][xc - x] != MAT_ID_EMPTY && rand() % res == 0)
+				data->fsim->map[yc - y][xc - x] = id;
+		}
+	}
+	if ((yc + x > 0 && yc + x < WINY) && (xc + y > 0 && xc + y < WINX))
+	{
+		if(data->fsim->map[yc + x][xc + y] != 'z' && data->fsim->map[yc + x][xc + y] != thougth)
+		{
+			if (data->fsim->map[yc + x][xc + y] == MAT_ID_EMPTY)
+				data->fsim->map[yc + x][xc + y] = id;
+			else if (data->fsim->map[yc + x][xc + y] != MAT_ID_EMPTY && rand() % res == 0)
+				data->fsim->map[yc + x][xc + y] = id;
+		}
+	}
+	if ((yc + x > 0 && yc + x < WINY) && (xc - y > 0 && xc - y < WINX))
+	{
+		if(data->fsim->map[yc + x][xc - y] != 'z' && data->fsim->map[yc + x][xc - y] != thougth)
+		{
+			if (data->fsim->map[yc + x][xc - y] == MAT_ID_EMPTY)
+				data->fsim->map[yc + x][xc - y] = id;
+			else if (data->fsim->map[yc + x][xc - y] != MAT_ID_EMPTY && rand() % res == 0)
+				data->fsim->map[yc + x][xc - y] = id;
+		}
+	}
+	if ((yc - x > 0 && yc - x < WINY) && (xc + y > 0 && xc + y < WINX))
+	{
+		if(data->fsim->map[yc - x][xc + y] != 'z' && data->fsim->map[yc - x][xc + y] != thougth)
+		{
+			if (data->fsim->map[yc - x][xc + y] == MAT_ID_EMPTY)
+				data->fsim->map[yc - x][xc + y] = id;
+			else if (data->fsim->map[yc - x][xc + y] != MAT_ID_EMPTY && rand() % res == 0)
+				data->fsim->map[yc - x][xc + y] = id;
+		}
+	}
+	if ((yc - x > 0 && yc - x < WINY) && (xc - y > 0 && xc - y < WINX))
+	{
+		if(data->fsim->map[yc - x][xc - y] != 'z' && data->fsim->map[yc - x][xc - y] != thougth)
+		{
+			if (data->fsim->map[yc - x][xc - y] == MAT_ID_EMPTY)
+				data->fsim->map[yc - x][xc - y] = id;
+			else if (data->fsim->map[yc - x][xc - y] != MAT_ID_EMPTY && rand() % res == 0)
+				data->fsim->map[yc - x][xc - y] = id;
+		}
+	}
+}
+
+void	explosion_circle(int xc, int yc, int r, t_data *data, int id, int res, int thought)
+{
+	int	x;
+	int	y;
+	int	d;
+
+	if (r < 0)
+		return ;
+	x = 0;
+	y = r;
+	d = 3 - 2 * r;
+	explosion_calc(xc, yc, x, y, data, id, res, thought);
+	while (y >= x)
+	{
+		x++;
+		if (d > 0)
+		{
+			y--;
+			d = d + 4 * (x - y) + 10;
+		}
+		else
+			d = d + 4 * x + 6;
+		explosion_calc(xc, yc, x, y, data, id, res, thought);
+	}
+	explosion_circle(xc, yc, r - 1, data, id, res, thought);
+}
+
+void	explode(int x, int y, t_data *data, int radius, int chance, int id, int res, int thought)
+{
+	if (chance == 1)
+		return ;
+	explosion_circle(x, y, radius, data, id, res, thought);
+	if (rand() % chance > 0)
+		explode(x, y, data, radius + 1, chance - 1, id, res, thought);
+}
+
+void	emulate_gunpowder(int x, int y, t_data *data)
+{
+	t_pt	pt;
+
+	if (rand() % 3 == 0)
+	{
+		pt = find_id(x, y, data, MAT_ID_FIRE);
+		if (pt.z == 1)
+		{
+			data->fsim->map[(int)pt.y][(int)pt.x] = MAT_ID_SMOKE;
+			if (rand() % 4 == 0)
+				data->fsim->map[y][x] = MAT_ID_EMPTY;
+			explode(x, y, data, 1, 4, MAT_ID_FIRE, 4, MAT_ID_GUNPOWDER);
+			return ;
+		}
+	}
+	if (emulate_solid(x, y, data, 2, 2, 0, 2, 3))
+		return ;
+}
+
+void	emulate_missile(int x, int y, t_data *data)
+{
+	if (emulate_solid(x, y, data, 1, -3, 100, 10, 2))
+		return ;
+	data->fsim->map[y][x] = MAT_ID_EMPTY;
+	explode(x, y, data, 100, 50, MAT_ID_FIRE, 6, 'z');
+	return ;
 }
 
 void	emulate_water(int x, int y, t_data *data, char c)
