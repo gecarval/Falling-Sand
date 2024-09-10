@@ -6,11 +6,11 @@
 /*   By: gecarval <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 12:01:15 by gecarval          #+#    #+#             */
-/*   Updated: 2024/08/30 12:19:15 by gecarval         ###   ########.fr       */
+/*   Updated: 2024/09/10 20:42:20 by gecarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./includes/renderer.h"
+#include "../includes/renderer.h"
 
 void	connect_vertices(t_data *data, t_pt *cur, int i)
 {

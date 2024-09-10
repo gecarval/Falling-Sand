@@ -6,11 +6,11 @@
 /*   By: gecarval <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 18:29:50 by gecarval          #+#    #+#             */
-/*   Updated: 2024/08/29 14:48:26 by gecarval         ###   ########.fr       */
+/*   Updated: 2024/09/10 20:42:28 by gecarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./includes/renderer.h"
+#include "../includes/renderer.h"
 
 t_pt	vec_add(t_pt pt1, t_pt pt2)
 {

@@ -6,11 +6,11 @@
 /*   By: gecarval <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 19:50:15 by gecarval          #+#    #+#             */
-/*   Updated: 2024/08/30 20:12:22 by gecarval         ###   ########.fr       */
+/*   Updated: 2024/09/10 20:36:39 by gecarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./includes/renderer.h"
+#include "../includes/renderer.h"
 
 void init_random()
 {

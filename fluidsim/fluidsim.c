@@ -6,11 +6,11 @@
 /*   By: gecarval <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 14:24:07 by gecarval          #+#    #+#             */
-/*   Updated: 2024/09/10 18:52:35 by gecarval         ###   ########.fr       */
+/*   Updated: 2024/09/10 20:36:29 by gecarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./includes/renderer.h"
+#include "../includes/renderer.h"
 
 void	post_processing(int x, int y, t_data *data, int id, int col)
 {
@@ -159,212 +159,6 @@ void	render_fluidmap(t_data *data)
 				process_material(x, y, data, MAT_COL_MISSILE);
 		}
 	}
-}
-
-void	circle_calc(int xc, int yc, int x, int y, t_data *data)
-{
-	if (xc <= 0 || xc >= WINX)
-		return ;
-	if (yc <= 0 || yc >= WINX)
-		return ;
-	if ((yc + y > 0 && yc + y < WINY) && (xc + x > 0 && xc + x < WINX))
-	{
-		if(data->fsim->map[yc + y][xc + x] != 'z')
-		{
-			if (data->click_fill == MAT_ID_EMPTY)
-				data->fsim->map[yc + y][xc + x] = data->click_fill;
-			else if (data->fsim->map[yc + y][xc + x] == MAT_ID_EMPTY)
-				data->fsim->map[yc + y][xc + x] = data->click_fill;
-		}
-	}
-	if ((yc + y > 0 && yc + y < WINY) && (xc - x > 0 && xc - x < WINX))
-	{
-		if(data->fsim->map[yc + y][xc - x] != 'z')
-		{
-			if (data->click_fill == MAT_ID_EMPTY)
-				data->fsim->map[yc + y][xc - x] = data->click_fill;
-			else if (data->fsim->map[yc + y][xc - x] == MAT_ID_EMPTY)
-				data->fsim->map[yc + y][xc - x] = data->click_fill;
-		}
-	}
-	if ((yc - y > 0 && yc - y < WINY) && (xc + x > 0 && xc + x < WINX))
-	{
-		if(data->fsim->map[yc - y][xc + x] != 'z')
-		{
-			if (data->click_fill == MAT_ID_EMPTY)
-				data->fsim->map[yc - y][xc + x] = data->click_fill;
-			else if (data->fsim->map[yc - y][xc + x] == MAT_ID_EMPTY)
-				data->fsim->map[yc - y][xc + x] = data->click_fill;
-		}
-	}
-	if ((yc - y > 0 && yc - y < WINY) && (xc - x > 0 && xc - x < WINX))
-	{
-		if(data->fsim->map[yc - y][xc - x] != 'z')
-		{
-			if (data->click_fill == MAT_ID_EMPTY)
-				data->fsim->map[yc - y][xc - x] = data->click_fill;
-			else if (data->fsim->map[yc - y][xc - x] == MAT_ID_EMPTY)
-				data->fsim->map[yc - y][xc - x] = data->click_fill;
-		}
-	}
-	if ((yc + x > 0 && yc + x < WINY) && (xc + y > 0 && xc + y < WINX))
-	{
-		if(data->fsim->map[yc + x][xc + y] != 'z')
-		{
-			if (data->click_fill == MAT_ID_EMPTY)
-				data->fsim->map[yc + x][xc + y] = data->click_fill;
-			else if (data->fsim->map[yc + x][xc + y] == MAT_ID_EMPTY)
-				data->fsim->map[yc + x][xc + y] = data->click_fill;
-		}
-	}
-	if ((yc + x > 0 && yc + x < WINY) && (xc - y > 0 && xc - y < WINX))
-	{
-		if(data->fsim->map[yc + x][xc - y] != 'z')
-		{
-			if (data->click_fill == MAT_ID_EMPTY)
-				data->fsim->map[yc + x][xc - y] = data->click_fill;
-			else if (data->fsim->map[yc + x][xc - y] == MAT_ID_EMPTY)
-				data->fsim->map[yc + x][xc - y] = data->click_fill;
-		}
-	}
-	if ((yc - x > 0 && yc - x < WINY) && (xc + y > 0 && xc + y < WINX))
-	{
-		if(data->fsim->map[yc - x][xc + y] != 'z')
-		{
-			if (data->click_fill == MAT_ID_EMPTY)
-				data->fsim->map[yc - x][xc + y] = data->click_fill;
-			else if (data->fsim->map[yc - x][xc + y] == MAT_ID_EMPTY)
-				data->fsim->map[yc - x][xc + y] = data->click_fill;
-		}
-	}
-	if ((yc - x > 0 && yc - x < WINY) && (xc - y > 0 && xc - y < WINX))
-	{
-		if(data->fsim->map[yc - x][xc - y] != 'z')
-		{
-			if (data->click_fill == MAT_ID_EMPTY)
-				data->fsim->map[yc - x][xc - y] = data->click_fill;
-			else if (data->fsim->map[yc - x][xc - y] == MAT_ID_EMPTY)
-				data->fsim->map[yc - x][xc - y] = data->click_fill;
-		}
-	}
-}
-
-void	circle_putmat(int xc, int yc, int r, t_data *data)
-{
-	int	x;
-	int	y;
-	int	d;
-
-	if (r < 0)
-		return ;
-	x = 0;
-	y = r;
-	d = 3 - 2 * r;
-	circle_calc(xc, yc, x, y, data);
-	while (y >= x)
-	{
-		x++;
-		if (d > 0)
-		{
-			y--;
-			d = d + 4 * (x - y) + 10;
-		}
-		else
-			d = d + 4 * x + 6;
-		circle_calc(xc, yc, x, y, data);
-	}
-	circle_putmat(xc, yc, r - 1, data);
-} 
-
-void	put_mat(int x, int y, t_data *data)
-{
-	int	i;
-	int	j;
-
-	if (x <= 0 || x >= WINX)
-		return ;
-	if (y <= 0 || y >= WINY)
-		return ;
-	i = y - data->brush_size;
-	while (i <= y + data->brush_size)
-	{
-		j = x - data->brush_size;
-		while(j <= x + data->brush_size)
-		{
-			if ((i > 0 && i < WINY) && (j > 0 && j < WINX))
-			{
-				if(data->fsim->map[i][j] != 'z')
-				{
-					if (data->click_fill == MAT_ID_EMPTY)
-						data->fsim->map[i][j] = data->click_fill;
-					else if (data->fsim->map[i][j] == MAT_ID_EMPTY)
-						data->fsim->map[i][j] = data->click_fill;
-				}
-			}
-			j++;
-		}
-		i++;
-	}
-}
-
-t_pt	find_id(int x, int y, t_data *data, char c)
-{
-	int	i;
-	int	j;
-	t_pt	pt;
-
-	pt.z = 0;
-	i = y + 1;
-	while (i >= y - 1)
-	{
-		j = x - 1;
-		while (j <= x + 1)
-		{
-			if (data->fsim->map[i][j] == c)
-			{
-				pt.x = j;
-				pt.y = i;
-				pt.z = 1;
-				return (pt);
-			}
-			j++;
-		}
-		i--;
-	}
-	return (pt);
-}
-
-t_pt	find_around_id(int x, int y, t_data *data, char c, int dist)
-{
-	int	i;
-	int	j;
-	t_pt	pt;
-
-	pt.z = 0;
-	i = y + dist;
-	while (i >= y - dist)
-	{
-		j = x - dist;
-		while (j <= x + dist)
-		{
-			if (!(x == j && y == i))
-			{
-				if ((j > 0 && j < WINX) && (i > 0 && i < WINY))
-				{
-					if (data->fsim->map[i][j] == c)
-					{
-						pt.x = j;
-						pt.y = i;
-						pt.z = 1;
-						return (pt);
-					}
-				}
-			}
-			j++;
-		}
-		i--;
-	}
-	return (pt);
 }
 
 void	process_gravity(t_data *data)
@@ -601,4 +395,150 @@ void	render_fluidmap_pp(int x, int y, t_data *data)
 	post_processing_pp(x, y, data, MAT_ID_OXYGEN, MAT_COL_OXYGENG);
 	post_processing_pp(x, y, data, MAT_ID_FOG, MAT_COL_FOGG);
 	post_processing_pp(x, y, data, MAT_ID_GLASS, MAT_COL_GLASSF);
+}
+
+void	circle_calc(int xc, int yc, int x, int y, t_data *data)
+{
+	if (xc <= 0 || xc >= WINX)
+		return ;
+	if (yc <= 0 || yc >= WINX)
+		return ;
+	if ((yc + y > 0 && yc + y < WINY) && (xc + x > 0 && xc + x < WINX))
+	{
+		if(data->fsim->map[yc + y][xc + x] != 'z')
+		{
+			if (data->click_fill == MAT_ID_EMPTY)
+				data->fsim->map[yc + y][xc + x] = data->click_fill;
+			else if (data->fsim->map[yc + y][xc + x] == MAT_ID_EMPTY)
+				data->fsim->map[yc + y][xc + x] = data->click_fill;
+		}
+	}
+	if ((yc + y > 0 && yc + y < WINY) && (xc - x > 0 && xc - x < WINX))
+	{
+		if(data->fsim->map[yc + y][xc - x] != 'z')
+		{
+			if (data->click_fill == MAT_ID_EMPTY)
+				data->fsim->map[yc + y][xc - x] = data->click_fill;
+			else if (data->fsim->map[yc + y][xc - x] == MAT_ID_EMPTY)
+				data->fsim->map[yc + y][xc - x] = data->click_fill;
+		}
+	}
+	if ((yc - y > 0 && yc - y < WINY) && (xc + x > 0 && xc + x < WINX))
+	{
+		if(data->fsim->map[yc - y][xc + x] != 'z')
+		{
+			if (data->click_fill == MAT_ID_EMPTY)
+				data->fsim->map[yc - y][xc + x] = data->click_fill;
+			else if (data->fsim->map[yc - y][xc + x] == MAT_ID_EMPTY)
+				data->fsim->map[yc - y][xc + x] = data->click_fill;
+		}
+	}
+	if ((yc - y > 0 && yc - y < WINY) && (xc - x > 0 && xc - x < WINX))
+	{
+		if(data->fsim->map[yc - y][xc - x] != 'z')
+		{
+			if (data->click_fill == MAT_ID_EMPTY)
+				data->fsim->map[yc - y][xc - x] = data->click_fill;
+			else if (data->fsim->map[yc - y][xc - x] == MAT_ID_EMPTY)
+				data->fsim->map[yc - y][xc - x] = data->click_fill;
+		}
+	}
+	if ((yc + x > 0 && yc + x < WINY) && (xc + y > 0 && xc + y < WINX))
+	{
+		if(data->fsim->map[yc + x][xc + y] != 'z')
+		{
+			if (data->click_fill == MAT_ID_EMPTY)
+				data->fsim->map[yc + x][xc + y] = data->click_fill;
+			else if (data->fsim->map[yc + x][xc + y] == MAT_ID_EMPTY)
+				data->fsim->map[yc + x][xc + y] = data->click_fill;
+		}
+	}
+	if ((yc + x > 0 && yc + x < WINY) && (xc - y > 0 && xc - y < WINX))
+	{
+		if(data->fsim->map[yc + x][xc - y] != 'z')
+		{
+			if (data->click_fill == MAT_ID_EMPTY)
+				data->fsim->map[yc + x][xc - y] = data->click_fill;
+			else if (data->fsim->map[yc + x][xc - y] == MAT_ID_EMPTY)
+				data->fsim->map[yc + x][xc - y] = data->click_fill;
+		}
+	}
+	if ((yc - x > 0 && yc - x < WINY) && (xc + y > 0 && xc + y < WINX))
+	{
+		if(data->fsim->map[yc - x][xc + y] != 'z')
+		{
+			if (data->click_fill == MAT_ID_EMPTY)
+				data->fsim->map[yc - x][xc + y] = data->click_fill;
+			else if (data->fsim->map[yc - x][xc + y] == MAT_ID_EMPTY)
+				data->fsim->map[yc - x][xc + y] = data->click_fill;
+		}
+	}
+	if ((yc - x > 0 && yc - x < WINY) && (xc - y > 0 && xc - y < WINX))
+	{
+		if(data->fsim->map[yc - x][xc - y] != 'z')
+		{
+			if (data->click_fill == MAT_ID_EMPTY)
+				data->fsim->map[yc - x][xc - y] = data->click_fill;
+			else if (data->fsim->map[yc - x][xc - y] == MAT_ID_EMPTY)
+				data->fsim->map[yc - x][xc - y] = data->click_fill;
+		}
+	}
+}
+
+void	circle_putmat(int xc, int yc, int r, t_data *data)
+{
+	int	x;
+	int	y;
+	int	d;
+
+	if (r < 0)
+		return ;
+	x = 0;
+	y = r;
+	d = 3 - 2 * r;
+	circle_calc(xc, yc, x, y, data);
+	while (y >= x)
+	{
+		x++;
+		if (d > 0)
+		{
+			y--;
+			d = d + 4 * (x - y) + 10;
+		}
+		else
+			d = d + 4 * x + 6;
+		circle_calc(xc, yc, x, y, data);
+	}
+	circle_putmat(xc, yc, r - 1, data);
+} 
+
+void	put_mat(int x, int y, t_data *data)
+{
+	int	i;
+	int	j;
+
+	if (x <= 0 || x >= WINX)
+		return ;
+	if (y <= 0 || y >= WINY)
+		return ;
+	i = y - data->brush_size;
+	while (i <= y + data->brush_size)
+	{
+		j = x - data->brush_size;
+		while(j <= x + data->brush_size)
+		{
+			if ((i > 0 && i < WINY) && (j > 0 && j < WINX))
+			{
+				if(data->fsim->map[i][j] != 'z')
+				{
+					if (data->click_fill == MAT_ID_EMPTY)
+						data->fsim->map[i][j] = data->click_fill;
+					else if (data->fsim->map[i][j] == MAT_ID_EMPTY)
+						data->fsim->map[i][j] = data->click_fill;
+				}
+			}
+			j++;
+		}
+		i++;
+	}
 }

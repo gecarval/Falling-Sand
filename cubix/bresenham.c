@@ -6,11 +6,11 @@
 /*   By: gecarval <gecarval@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 17:53:51 by gecarval          #+#    #+#             */
-/*   Updated: 2024/09/10 17:08:20 by gecarval         ###   ########.fr       */
+/*   Updated: 2024/09/10 20:42:11 by gecarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./includes/renderer.h"
+#include "../includes/renderer.h"
 
 void	draw_line_y(t_delta x, t_delta y, t_data *data, int color)
 {
