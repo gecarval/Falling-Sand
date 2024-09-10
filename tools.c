@@ -6,7 +6,7 @@
 /*   By: gecarval <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 17:38:51 by gecarval          #+#    #+#             */
-/*   Updated: 2024/09/10 20:27:45 by gecarval         ###   ########.fr       */
+/*   Updated: 2024/09/10 20:55:25 by gecarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ void	controls_mark(t_data *data)
 	mlx_string_put(data->ini, data->win, 15, 30, 0xFFFFFF, "','=Decrease_Brush ; '.'=Increase_Brush");
 	mlx_string_put(data->ini, data->win, 15, 45, 0xFFFFFF, "Q=Empty ; W=Sand ; E=WetSand ; R=Stone ; T=GunPowder ; Y=Soap ; U=Wood ; I=Iron ; O=Rust ; P=Glass");
 	mlx_string_put(data->ini, data->win, 15, 60, 0xFFFFFF, "A=Water ; S=Lava ; D=Oil ; F=Acid ; G=Fly");
-	mlx_string_put(data->ini, data->win, 15, 75, 0xFFFFFF, "Z=Oxygen ; X=Hidrogen ; C=Propane ; V=Steam ; B=Missil");
+	mlx_string_put(data->ini, data->win, 15, 75, 0xFFFFFF, "Z=Fire ; X=Oxygen ; C=Hidrogen ; V=Propane ; B=Steam ; N=Missil");
 }
 
 void	render_background(t_data *data, int color)
@@ -217,12 +217,14 @@ int	mlx_cooked(int key, t_data *data)
 	if (key == 'z')
 		data->click_fill = MAT_ID_OXYGEN;
 	if (key == 'x')
-		data->click_fill = MAT_ID_HIDROGEN;
+		data->click_fill = MAT_ID_OXYGEN;
 	if (key == 'c')
-		data->click_fill = MAT_ID_PROPANE;
+		data->click_fill = MAT_ID_HIDROGEN;
 	if (key == 'v')
-		data->click_fill = MAT_ID_STEAM;
+		data->click_fill = MAT_ID_PROPANE;
 	if (key == 'b')
+		data->click_fill = MAT_ID_STEAM;
+	if (key == 'n')
 		data->click_fill = MAT_ID_MISSILE;
 	if (key == ESC)
 		exit_data(data, 0);
