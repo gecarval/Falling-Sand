@@ -6,7 +6,7 @@
 /*   By: gecarval <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 17:38:51 by gecarval          #+#    #+#             */
-/*   Updated: 2024/09/10 20:55:25 by gecarval         ###   ########.fr       */
+/*   Updated: 2024/09/10 20:57:27 by gecarval         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -215,7 +215,7 @@ int	mlx_cooked(int key, t_data *data)
 	if (key == 'g')
 		data->click_fill = MAT_ID_FLY;
 	if (key == 'z')
-		data->click_fill = MAT_ID_OXYGEN;
+		data->click_fill = MAT_ID_FIRE;
 	if (key == 'x')
 		data->click_fill = MAT_ID_OXYGEN;
 	if (key == 'c')
