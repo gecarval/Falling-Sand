@@ -24,49 +24,56 @@ The game of life has simple rule set has descrived:
 
 # Falling Sand Game
 
-Cumprimentos a todos, gostaria de relatar sobre um projecto individual que venho trabalhado estes dias.
+> A falling-sand game is a genre of video game and a sub-genre of sandbox games which typically utilize a two-dimensional particle or cellular automaton based game engine to simulate various materials interacting in a sandbox environment.
+> In falling-sand games, the user can interact with (e.g. place and remove) particles on a canvas which can interact with other particles in various ways, which can lead to complex emergent behaviour. As sandbox games, they generally have an emphasis on free-form gameplay, relaxed rules, and minimal goals.
+> 
+> *-On Wikipedia.*
 
-O nome do tipo de projecto entre a comunidade é bem popular, *CELLULAR AUTOMATON*
-Sendo mais específico *FALLING SAND*.
+The falling sand game is a type os cellular automaton where as the game of life each set of cell as a defined behavior when in contact with diferent cells.
 
-*COMPORTAMENTO*
+## Behavior
 
-O mesmo tem como objectivo simular o comportamento  da areia em uma matriz  e até é
-mais simples imaginar a mesma como uma matriz e muito mais.
+The main objective of this simulation is to recreate the behaviors of different material types within a grid-based environment. A simple action, like setting fire to water, can trigger cascading effects across large quantities of materials. These interactions create a dynamic and engaging experience, where players observe emergent physical phenomena, such as evaporation, flow, and chemical reactions.
 
-## Sand
+### Sand
 
-Onde a areia (como na figura abaixo), terá a tendência de cair ou ir para baixo se os espaços
-abaixos estiverem vazios.
+In this game, sand behaves like a loose granular material. When the cell below a sand particle is empty, the particle "falls" by swapping places. If the space below is occupied, the sand checks neighboring cells to move diagonally, mimicking gravitational behavior.
 
 ![image](https://github.com/user-attachments/assets/2aff4d92-dcd1-4c7f-a88c-612091dca13c)
 
 
-## Water
+### Water
 
-E por incremento outras partículas como a água, onde seu comportamento inicial é como da
-areia e após está ele simula seu comportamento de vazão ou de fluir, vendo espaços livres
-na esquerda ou direita e indo para a mesma.
+Water behaves similarly to sand in its falling motion, but when it hits the ground, it attempts to flow left or right. The water particles randomly move into empty horizontal spaces, simulating fluidity.
+
 
 ![image](https://github.com/user-attachments/assets/d1d8a22f-40bb-4a6f-8853-cc9f3660d620)
 
 
+### Chemical Reactions and Physics
+
+Other complex interactions include:
+
+- Chemical reactions such as soap bubbles and acid reactions.
+- Heat-based interactions like water evaporating or lava being extinguished.
+- Inertia and momentum, where water flows to fill available space in a container, and gases spread or liquids cascade based on physical properties.
+
 ## Footage
 
-Há diversas filmagens
-Sintam-se livres de analisar a física e química emulada na mesma:
+There are diverse footage took from the simulation., feel free to get a look into it:
 
 ![sand](https://github.com/user-attachments/assets/dbb0091a-3391-47b9-8831-a57871db9423)
 
+> [!Note]
+> In sand there is even the behavior of inercia and collision.
 
-Onde há reações químicas de sabão,
+- Soap and acid reactions:
 
 ![soap](https://github.com/user-attachments/assets/5bcad04d-ebe3-4d50-9017-b780d0c8fb08)
 
 ![acid ract](https://github.com/user-attachments/assets/edbc1bf7-be8f-482a-a0bf-fb26216c7d23)
 
-
-Calor ao evapor água ou apagar a lava
+- Lava, fire, and water interactions:
 
 ![fire and lava](https://github.com/user-attachments/assets/5ca7a21d-e8c3-47d8-8aa4-1f06ca5a0125)
 
@@ -75,11 +82,11 @@ Calor ao evapor água ou apagar a lava
 ![gas and wood](https://github.com/user-attachments/assets/0937e65b-a67a-4124-b62a-0438197e09e6)
 
 
-E até inércia e momento,
+- Sand in motion, reacting to inertia and collisions:
 
 ![cinetics](https://github.com/user-attachments/assets/179f0d3a-2bfe-4e82-bd1a-5b61e9aba41f)
 
 
-Como a tendência da água ocupar o espaço disponível no recipiente.
+- Water physics, with inertia and momentum-based behavior as water fills available space:
 
 ![water physics](https://github.com/user-attachments/assets/480a9ab4-676f-4819-b778-977124b7544d)
