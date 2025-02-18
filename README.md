@@ -1,3 +1,26 @@
+# Cellular Automaton
+> A cellular automaton (pl. cellular automata, abbrev. CA) is a discrete model of computation studied in automata theory. Cellular automata are also called cellular spaces, tessellation automata, homogeneous structures, cellular structures, tessellation structures, and iterative arrays. Cellular automata have found application in various areas, including physics, theoretical biology and microstructure modeling.
+> 
+> *-On Wikipedia.*
+
+The cellular automaton is a simulation that got populazired throught Conway's game of life where it consists of regular grids of cells or matrix where it has a finite amount of states and each cell as a defined amount of rules based on it's neighbors relative to the cell's position and with such simple rules complex and emergent behaviors could occur.
+
+# Conway's Game of Life
+> The Game of Life, also known as Conway's Game of Life or simply Life, is a cellular automaton devised by the British mathematician John Horton Conway in 1970. It is a zero-player game, meaning that its evolution is determined by its initial state, requiring no further input. One interacts with the Game of Life by creating an initial configuration and observing how it evolves. It is Turing complete and can simulate a universal constructor or any other Turing machine.
+>
+> *-On Wikipedia.*
+
+![Conway's Game of Life](https://en.wikipedia.org/wiki/File:Gospers_glider_gun.gif)
+
+The game of life has simple rule set has descrived:
+
+- If a cell neighbourhood has less than two live cells, all cells die;
+- If the alive cell has two or three live neighbours, the cells remain;
+- If the cell neighbourhood has more than three cells, the singular cell dies;
+- If a dead cell has exactly three alive cells in the neighbourhood, it becomes a live.
+
+# Falling Sand Game
+
 Cumprimentos a todos, gostaria de relatar sobre um projecto individual que venho trabalhado estes dias.
 
 O nome do tipo de projecto entre a comunidade é bem popular, *CELLULAR AUTOMATON*
