@@ -12,9 +12,8 @@ The cellular automaton is a simulation that got populazired throught Conway's ga
 
 
 <div align="center">
-![Conway's Game of Life](https://upload.wikimedia.org/wikipedia/commons/e/e5/Gospers_glider_gun.gif)
+  <img src="https://upload.wikimedia.org/wikipedia/commons/e/e5/Gospers_glider_gun.gif">
 </div>
-
 
 The game of life has simple rule set has descrived:
 
