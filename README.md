@@ -11,7 +11,7 @@ The cellular automaton is a simulation that got populazired throught Conway's ga
 > *-On Wikipedia.*
 
 
-<div align="center">
+<div align="left">
   <img src="https://upload.wikimedia.org/wikipedia/commons/e/e5/Gospers_glider_gun.gif">
 </div>
 
@@ -34,7 +34,7 @@ Sendo mais específico *FALLING SAND*.
 O mesmo tem como objectivo simular o comportamento  da areia em uma matriz  e até é
 mais simples imaginar a mesma como uma matriz e muito mais.
 
-*AREIA*
+## Sand
 
 Onde a areia (como na figura abaixo), terá a tendência de cair ou ir para baixo se os espaços
 abaixos estiverem vazios.
@@ -42,7 +42,7 @@ abaixos estiverem vazios.
 ![image](https://github.com/user-attachments/assets/2aff4d92-dcd1-4c7f-a88c-612091dca13c)
 
 
-*ÁGUA*
+## Water
 
 E por incremento outras partículas como a água, onde seu comportamento inicial é como da
 areia e após está ele simula seu comportamento de vazão ou de fluir, vendo espaços livres
@@ -51,7 +51,7 @@ na esquerda ou direita e indo para a mesma.
 ![image](https://github.com/user-attachments/assets/d1d8a22f-40bb-4a6f-8853-cc9f3660d620)
 
 
-*FILMAGENS*
+## Footage
 
 Há diversas filmagens
 Sintam-se livres de analisar a física e química emulada na mesma:
