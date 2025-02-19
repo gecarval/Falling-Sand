@@ -76,7 +76,7 @@ There are diverse footage took from the simulation., feel free to get a look int
 ![sand](https://github.com/user-attachments/assets/dbb0091a-3391-47b9-8831-a57871db9423)
 
 > [!Note]
-> In sand there is even the behavior of inercia and collision.
+> In sand there there is even the behavior of inercia and collision.
 
 - Soap and acid reactions:
 
