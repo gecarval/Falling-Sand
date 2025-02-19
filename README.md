@@ -103,7 +103,7 @@ There are diverse footage took from the simulation, feel free to get a look into
 ![water physics](https://github.com/user-attachments/assets/480a9ab4-676f-4819-b778-977124b7544d)
 
 # Installation
-The project usees the [MiniLibX](https://harm-smits.github.io/42docs/libs/minilibx) using the X11 Window system in the Linux Operating System, after the instalation of all dependencies you should do as required:
+The project uses the [MiniLibX](https://harm-smits.github.io/42docs/libs/minilibx) using the X11 Window system in the Linux Operating System, after the instalation of all dependencies you should do as required:
 
 - Clone the repository;
 ``` sh
