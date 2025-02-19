@@ -1,3 +1,14 @@
+<h2 align="center">
+	REPOSITORY STATS
+</h2>
+
+<p align="center">
+	<img alt="GitHub code size in bytes" src="https://img.shields.io/github/languages/code-size/gecarval/Falling-Sand?color=lightblue" />
+	<img alt="Code language count" src="https://img.shields.io/github/languages/count/gecarval/Falling-Sand?color=yellow" />
+	<img alt="GitHub top language" src="https://img.shields.io/github/languages/top/gecarval/Falling-Sand?color=blue" />
+	<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/gecarval/Falling-Sand?color=green" />
+</p>
+
 # Cellular Automaton
 > A cellular automaton (pl. cellular automata, abbrev. CA) is a discrete model of computation studied in automata theory. Cellular automata are also called cellular spaces, tessellation automata, homogeneous structures, cellular structures, tessellation structures, and iterative arrays. Cellular automata have found application in various areas, including physics, theoretical biology and microstructure modeling.
 > 
@@ -90,3 +101,57 @@ There are diverse footage took from the simulation., feel free to get a look int
 - Water physics, with inertia and momentum-based behavior as water fills available space:
 
 ![water physics](https://github.com/user-attachments/assets/480a9ab4-676f-4819-b778-977124b7544d)
+
+# Installation
+The project usees the [MiniLibX](https://harm-smits.github.io/42docs/libs/minilibx) using the X11 Window system in the Linux Operating System, after the instalation of all dependencies you should do as required:
+
+- Clone the repository;
+``` sh
+git clone https://github.com/gecarval/Falling-Sand.git
+```
+- Move to the folder;
+``` sh
+cd Falling-Sand
+```
+- Compile the project;
+``` sh
+make
+```
+- execute the program.
+``` sh
+./render
+```
+## Controls
+|BUTTON|ACTION|
+|---|---|
+|`Q`| Empty|
+|`W`| Sand|
+|`E`| WetSand|
+|`R`| Stone|
+|`T`| GunPowder|
+|`Y`| Soap|
+|`U`| Wood|
+|`I`| Iron|
+|`O`| Rust|
+|`P`| Glass|
+|`A`| Water|
+|`S`| Lava|
+|`D`| Oil|
+|`F`| Acid|
+|`G`| Fly|
+|`Z`| Fire|
+|`X`| Oxygen|
+|`C`| Hidrogen|
+|`V`| Propane|
+|`B`| Steam|
+|`N`| Missil|
+|`,`| decrease brush size|
+|`.`| increase brush size|
+|`LMB`| activate brush|
+|`RMB`| deactivate brush|
+|`Esc`| Exit|
+|`[`| increase speed|
+|`]`| decrease speed|
+|`1`| on/off 3Dcube|
+|`2`| on/off falling sand|
+|`Space`| clear screen|
